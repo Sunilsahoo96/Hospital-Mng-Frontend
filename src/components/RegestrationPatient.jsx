@@ -27,19 +27,32 @@ function PatientRegistration(){
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form Submitted", formData);
-    counter++;
+    try {
+      const response = await fetch("http://localhost:4545/api/patients", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData),
+      });
 
-    setFormData({
-      uan: generateUAN(),
-      patientName: "",
-      guardianName: "",
-      address: "",
-      mobile: "",
-      alternateMobile: "",
-    });
+      if(response.ok) {
+        alert("Patient Registered Successfully!");
+        // Reset form
+        setFormData({
+          uan: generateUAN(),
+          patientName: "",
+          guardianName: "",
+          address: "",
+          mobile: "",
+          alternateMobile: "",
+        });
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+    }
   };
 
   return (

@@ -9,31 +9,39 @@ function Login() {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError(""); 
+    setError("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${API_URL}/login`, formData);
-      if (res.data.token) {
+      const res = await axios.post(`${API_URL}/api/auth/login`, formData);
+      
+      // Check for successful response structure
+      if (res.data && res.data.token) {
         localStorage.setItem("token", res.data.token);
-        localStorage.setItem("role", res.data.role);
         alert("Login Successful!");
-
-        const roleRedirects = {
-          Doctor: "/doctor-dashboard",
-          Nurse: "/nurse-dashboard",
-          Reception: "/reception-dashboard",
-          Admin: "/admin-dashboard",
-          "Medicine Cashier": "/medicine-dashboard",
-        };
-        window.location.href = roleRedirects[res.data.role] || "/dashboard";
+        
+        // Verify role exists in response
+        if (res.data.role) {
+          const roleRedirects = {
+            Doctor: "/doctor-dashboard",
+            Nurse: "/nurse-dashboard",
+            Reception: "/reception-dashboard",
+            Admin: "/admin-dashboard",
+            "Medicine Cashier": "/medicine-dashboard",
+          };
+          window.location.href = roleRedirects[res.data.role] || "/dashboard";
+        }
       } else {
-        setError("Invalid credentials! Please try again.");
+        setError("Invalid response from server");
       }
     } catch (error) {
-      setError(error.response?.data?.message || "Login failed! Please check your credentials.");
+      // Handle different error types
+      const errorMessage = error.response?.data?.message || 
+                         error.message || 
+                         "Login failed! Please try again.";
+      setError(errorMessage);
     }
   };
 
