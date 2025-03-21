@@ -9,16 +9,26 @@ function Signup() {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setMessage(""); 
+    setMessage("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${API_URL}/signup`, formData);
-      setMessage(res.data.message || "Signup Successful!");
+      const res = await axios.post(`${API_URL}/api/auth/signup`, formData);
+      
+      // Check for expected response structure
+      if (res.data && res.data.message) {
+        setMessage(res.data.message);
+      } else {
+        setMessage("Registration completed successfully!");
+      }
     } catch (error) {
-      setMessage(error.response?.data?.message || "Signup Failed!");
+      // Handle different error types
+      const errorMessage = error.response?.data?.message || 
+                         error.message || 
+                         "Registration failed! Please try again.";
+      setMessage(errorMessage);
     }
   };
 
