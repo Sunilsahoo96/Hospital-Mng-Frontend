@@ -28,34 +28,18 @@ const AddMedicine = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-   
-    for (let key in formData) {
-      if (!formData[key]) {
-        alert("Please fill all fields.");
-        return;
-      }
-    }
-
-   
-    if (formData.ExpiryDate <= formData.MfgDate) {
-      alert("Expiry date must be after manufacturing date.");
-      return;
-    }
-
-   
-    fetch("http://localhost:4545/add-medicine", {
+    fetch("http://localhost:4545/api/medicine/add-medicine", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
       body: JSON.stringify(formData),
     })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Response:", data);
+    .then(res => res.json())
+    .then(data => {
+      if(data.message) {
         alert("Medicine Added Successfully!");
-
-        
+        // Reset form
         setFormData({
           MedicineName: "",
           Manufacturer: "",
@@ -65,10 +49,10 @@ const AddMedicine = () => {
           SellingPrice: "",
           MedicinePerStrip: "",
         });
-      })
-      .catch((error) => console.error("Error:", error));
+      }
+    })
+    .catch(error => console.error("Error:", error));
   };
-
   return (
     <div className="container mt-4">
       <div className="card shadow-sm p-4">
