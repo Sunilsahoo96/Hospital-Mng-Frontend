@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const API_URL = "http://localhost:4545";
+const API_URL = "http://localhost:5000";
 
 function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });

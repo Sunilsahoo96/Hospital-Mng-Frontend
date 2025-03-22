@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import axios from "axios";
 
-const API_URL = "http://localhost:4545";
+const API_URL = "http://localhost:5000";
 
 function Signup() {
   const [formData, setFormData] = useState({ name: "", email: "", password: "", role: "Doctor" });
