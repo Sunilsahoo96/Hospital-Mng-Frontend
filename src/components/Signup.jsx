@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -16,7 +16,7 @@ function Signup() {
     e.preventDefault();
     try {
       const res = await axios.post(`${API_URL}/api/auth/signup`, formData);
-      
+
       // Check for expected response structure
       if (res.data && res.data.message) {
         setMessage(res.data.message);
@@ -25,9 +25,9 @@ function Signup() {
       }
     } catch (error) {
       // Handle different error types
-      const errorMessage = error.response?.data?.message || 
-                         error.message || 
-                         "Registration failed! Please try again.";
+      const errorMessage = error.response?.data?.message ||
+        error.message ||
+        "Registration failed! Please try again.";
       setMessage(errorMessage);
     }
   };
@@ -74,19 +74,19 @@ const styles = {
     left: 0,
     width: "100%",
     height: "100%",
-    background: "rgba(0, 0, 0, 0.4)", 
-    backdropFilter: "blur(5px)", 
+    background: "rgba(0, 0, 0, 0.4)",
+    backdropFilter: "blur(5px)",
   },
   card: {
     position: "relative",
-    background: "rgba(255, 255, 255, 0.2)", 
+    background: "rgba(255, 255, 255, 0.2)",
     padding: "2rem",
     borderRadius: "15px",
     boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.2)",
     textAlign: "center",
     width: "350px",
-    backdropFilter: "blur(10px)", 
-    border: "1px solid rgba(255, 255, 255, 0.3)", 
+    backdropFilter: "blur(10px)",
+    border: "1px solid rgba(255, 255, 255, 0.3)",
   },
   heading: {
     fontSize: "2rem",
@@ -109,7 +109,7 @@ const styles = {
     borderRadius: "5px",
     outline: "none",
     transition: "0.3s",
-    background: "rgba(255, 255, 255, 0.2)", 
+    background: "rgba(255, 255, 255, 0.2)",
     color: "#fff",
     backdropFilter: "blur(5px)",
     border: "1px solid rgba(255, 255, 255, 0.3)",

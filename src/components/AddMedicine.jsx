@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { TextField, Button, Grid, Card, CardContent, Typography } from "@mui/material";
+
+const API_URL = process.env.REACT_APP_API_URL;
 
 const AddMedicine = () => {
   const [formData, setFormData] = useState({
@@ -10,7 +13,6 @@ const AddMedicine = () => {
     SellingPrice: "",
     MedicinePerStrip: "",
   });
-
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
@@ -28,132 +30,88 @@ const AddMedicine = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    fetch("http://localhost:4545/api/medicine/add-medicine", {
+    fetch(`${API_URL}/api/medicine/add-medicine`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`,
       },
       body: JSON.stringify(formData),
     })
-    .then(res => res.json())
-    .then(data => {
-      if(data.message) {
-        alert("Medicine Added Successfully!");
-        // Reset form
-        setFormData({
-          MedicineName: "",
-          Manufacturer: "",
-          MfgDate: "",
-          ExpiryDate: "",
-          BuyingPrice: "",
-          SellingPrice: "",
-          MedicinePerStrip: "",
-        });
-      }
-    })
-    .catch(error => console.error("Error:", error));
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.message) {
+          alert("Medicine Added Successfully!");
+          setFormData({
+            MedicineName: "",
+            Manufacturer: "",
+            MfgDate: "",
+            ExpiryDate: "",
+            BuyingPrice: "",
+            SellingPrice: "",
+            MedicinePerStrip: "",
+          });
+        }
+      })
+      .catch((error) => console.error("Error:", error));
   };
+
+  const handleCancel = () => {
+    setFormData({
+      MedicineName: "",
+      Manufacturer: "",
+      MfgDate: "",
+      ExpiryDate: "",
+      BuyingPrice: "",
+      SellingPrice: "",
+      MedicinePerStrip: "",
+    });
+  };
+
+  const isFormIncomplete = Object.values(formData).some((val) => val === "");
+
   return (
-    <div className="container mt-4">
-      <div className="card shadow-sm p-4">
-        <h2 className="mb-4 text-center">Add Medicine</h2>
+    <Card sx={{ maxWidth: 500, margin: "auto", mt: 4, p: 3 }}>
+      <CardContent>
+        <Typography variant="h5" align="center" gutterBottom>
+          Add Medicine
+        </Typography>
         <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label className="form-label">Medicine Name</label>
-            <input
-              type="text"
-              name="MedicineName"
-              value={formData.MedicineName}
-              onChange={handleChange}
-              className="form-control"
-              placeholder="Enter medicine name"
-              required
-            />
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label">Manufacturer</label>
-            <input
-              type="text"
-              name="Manufacturer"
-              value={formData.Manufacturer}
-              onChange={handleChange}
-              className="form-control"
-              placeholder="Enter manufacturer name"
-              required
-            />
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label">Manufacturing Date</label>
-            <input
-              type="date"
-              name="MfgDate"
-              value={formData.MfgDate}
-              onChange={handleChange}
-              className="form-control"
-              required
-            />
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label">Expiry Date</label>
-            <input
-              type="date"
-              name="ExpiryDate"
-              value={formData.ExpiryDate}
-              onChange={handleChange}
-              className="form-control"
-              required
-            />
-            {error && <div className="text-danger mt-1">{error}</div>}
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label">Buying Price</label>
-            <input
-              type="number"
-              name="BuyingPrice"
-              value={formData.BuyingPrice}
-              onChange={handleChange}
-              className="form-control"
-              placeholder="Enter buying price"
-              required
-            />
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label">Selling Price</label>
-            <input
-              type="number"
-              name="SellingPrice"
-              value={formData.SellingPrice}
-              onChange={handleChange}
-              className="form-control"
-              placeholder="Enter selling price"
-              required
-            />
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label">Medicines per Strip</label>
-            <input
-              type="number"
-              name="MedicinePerStrip"
-              value={formData.MedicinePerStrip}
-              onChange={handleChange}
-              className="form-control"
-              placeholder="Enter number of medicines per strip"
-              required
-            />
-          </div>
-
-          <button type="submit" className="btn btn-primary w-100">
-            Add Medicine
-          </button>
+          <TextField label="Medicine Name" name="MedicineName" fullWidth margin="dense" value={formData.MedicineName} onChange={handleChange} required />
+          <TextField label="Manufacturer" name="Manufacturer" fullWidth margin="dense" value={formData.Manufacturer} onChange={handleChange} required />
+          <Grid container spacing={2} sx={{ mt: 1 }}>
+            <Grid item xs={6}>
+              <TextField label="Manufacturing Date" type="date" name="MfgDate" fullWidth InputLabelProps={{ shrink: true }} margin="dense" value={formData.MfgDate} onChange={handleChange} required />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField label="Expiry Date" type="date" name="ExpiryDate" fullWidth InputLabelProps={{ shrink: true }} margin="dense" value={formData.ExpiryDate} onChange={handleChange} required />
+              {error && <Typography color="error" variant="body2">{error}</Typography>}
+            </Grid>
+          </Grid>
+          <Grid container spacing={2} sx={{ mt: 1 }}>
+            <Grid item xs={6}>
+              <TextField label="Buying Price" type="number" name="BuyingPrice" fullWidth margin="dense" value={formData.BuyingPrice} onChange={handleChange} required />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField label="Selling Price" type="number" name="SellingPrice" fullWidth margin="dense" value={formData.SellingPrice} onChange={handleChange} required />
+            </Grid>
+          </Grid>
+          <TextField label="Medicines per Strip" type="number" name="MedicinePerStrip" fullWidth margin="dense" value={formData.MedicinePerStrip} onChange={handleChange} required />
+          <Grid container spacing={2} sx={{ mt: 2 }}>
+            <Grid item xs={6}>
+              <Button variant="outlined" fullWidth onClick={handleCancel} sx={{ mt: 1 }}>
+                Cancel
+              </Button>
+            </Grid>
+            <Grid item xs={6}>
+              <Button type="submit" variant="contained" fullWidth disabled={isFormIncomplete} sx={{ mt: 1 }}>
+                Add Medicine
+              </Button>
+            </Grid>
+          </Grid>
         </form>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 
