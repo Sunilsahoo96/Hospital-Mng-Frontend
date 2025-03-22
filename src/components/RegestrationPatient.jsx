@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { TextField, Button, Container, Typography, Box } from "@mui/material";
+const API_URL = process.env.REACT_APP_API_URL;
 
-let counter = 1;
-
-const generateUAN = () => {
+const generateUAN = (counter) => {
   const today = new Date();
   const formattedDate = today.toISOString().split("T")[0].replace(/-/g, "");
   return `${formattedDate}${counter}`;
 };
 
-function PatientRegistration(){
+function PatientRegistration() {
+  const [counter, setCounter] = useState(() => {
+    return Number(localStorage.getItem("uanCounter")) || 1; // Get counter from localStorage
+  });
+
   const [formData, setFormData] = useState({
     uan: "",
     patientName: "",
@@ -19,8 +22,16 @@ function PatientRegistration(){
     alternateMobile: "",
   });
 
+  // Update UAN whenever counter changes
   useEffect(() => {
-    setFormData((prevData) => ({ ...prevData, uan: generateUAN() }));
+    setFormData((prevData) => ({
+      ...prevData,
+      uan: generateUAN(counter),
+    }));
+  }, [counter]); // Runs when counter updates
+
+  useEffect(() => {
+    setCounter((prev) => prev + 1); // Increment counter once when the component mounts
   }, []);
 
   const handleChange = (e) => {
@@ -29,20 +40,25 @@ function PatientRegistration(){
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const response = await fetch("http://localhost:4545/api/patient/registration", {
+      const response = await fetch(`${API_URL}/api/patient/registration`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
-      if(response.ok) {
+      if (response.ok) {
         alert("Patient Registered Successfully!");
-        // Reset form
+
+        // Increment counter for next UAN
+        const newCounter = counter + 1;
+        setCounter(newCounter);
+        localStorage.setItem("uanCounter", newCounter);
+
+        // Reset form with new UAN
         setFormData({
-          uan: generateUAN(),
+          uan: generateUAN(newCounter),
           patientName: "",
           guardianName: "",
           address: "",
@@ -62,61 +78,12 @@ function PatientRegistration(){
           Patient Registration
         </Typography>
         <form onSubmit={handleSubmit}>
-          <TextField
-            fullWidth
-            margin="normal"
-            label="UAN Number"
-            name="uan"
-            value={formData.uan}
-            disabled
-            placeholder="Auto-generated UAN"
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Patient Name"
-            name="patientName"
-            value={formData.patientName}
-            onChange={handleChange}
-            required
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Guardian Name"
-            name="guardianName"
-            value={formData.guardianName}
-            onChange={handleChange}
-            required
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Address"
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-            multiline
-            rows={3}
-            required
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Mobile Number"
-            name="mobile"
-            value={formData.mobile}
-            onChange={handleChange}
-            required
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Alternate Mobile Number"
-            name="alternateMobile"
-            value={formData.alternateMobile}
-            onChange={handleChange}
-          />
+          <TextField fullWidth margin="normal" label="UAN Number" name="uan" value={formData.uan} disabled />
+          <TextField fullWidth margin="normal" label="Patient Name" name="patientName" value={formData.patientName} onChange={handleChange} required />
+          <TextField fullWidth margin="normal" label="Guardian Name" name="guardianName" value={formData.guardianName} onChange={handleChange} required />
+          <TextField fullWidth margin="normal" label="Address" name="address" value={formData.address} onChange={handleChange} multiline rows={3} required />
+          <TextField fullWidth margin="normal" label="Mobile Number" name="mobile" value={formData.mobile} onChange={handleChange} required />
+          <TextField fullWidth margin="normal" label="Alternate Mobile Number" name="alternateMobile" value={formData.alternateMobile} onChange={handleChange} />
           <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
             Register
           </Button>
@@ -124,6 +91,6 @@ function PatientRegistration(){
       </Box>
     </Container>
   );
-};
+}
 
 export default PatientRegistration;
