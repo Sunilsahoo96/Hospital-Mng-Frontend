@@ -62,7 +62,7 @@ const AllMedicineDetails = () => {
       </Typography>
       <Stack direction="row" spacing={2} sx={{ mb: 2, justifyContent: "center" }}>
         <TextField
-          label="Search Medicine"
+          label="Medicine Name"
           variant="outlined"
           size="small"
           value={searchQuery}
