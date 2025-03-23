@@ -12,7 +12,9 @@ const AddMedicine = () => {
     BuyingPrice: "",
     SellingPrice: "",
     MedicinePerStrip: "",
+    HowManyStrips: "",  // Added strip count field
   });
+
   const [error, setError] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
@@ -51,6 +53,7 @@ const AddMedicine = () => {
             BuyingPrice: "",
             SellingPrice: "",
             MedicinePerStrip: "",
+            HowManyStrips: "",  // Reset strip count
           });
         }
       })
@@ -66,6 +69,7 @@ const AddMedicine = () => {
       BuyingPrice: "",
       SellingPrice: "",
       MedicinePerStrip: "",
+      HowManyStrips: "",
     });
   };
 
@@ -94,6 +98,7 @@ const AddMedicine = () => {
             <TextField label="Selling Price" type="number" name="SellingPrice" fullWidth margin="normal" value={formData.SellingPrice} onChange={handleChange} required />
           </Stack>
           <TextField label="Medicines per Strip" type="number" name="MedicinePerStrip" fullWidth margin="normal" value={formData.MedicinePerStrip} onChange={handleChange} required />
+          <TextField label="How Many Strips" type="number" name="HowManyStrips" fullWidth margin="normal" value={formData.HowManyStrips} onChange={handleChange} required />
           <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
             <Button variant="outlined" fullWidth onClick={handleCancel}>
               Cancel
