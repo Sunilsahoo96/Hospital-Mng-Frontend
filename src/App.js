@@ -5,6 +5,7 @@ import PatientRegistration from "./components/RegestrationPatient";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import Home from "./components/Home"; 
+import AllMedicineDetails from "./components/AllMedicineDetails";
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />  
           <Route path="/login" element={<Login />} />  
           <Route path="/add-medicine" element={<AddMedicine />} />
+          <Route path="/get-medicine" element={<AllMedicineDetails />} />
           <Route path="/patient-registration" element={<PatientRegistration />} />
         </Routes>
       </div>
