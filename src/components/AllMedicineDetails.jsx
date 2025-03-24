@@ -1,8 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, CircularProgress, TextField, IconButton, Stack, Button, TablePagination, TableSortLabel, Chip
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, CircularProgress, TextField, Stack, Button, TablePagination, TableSortLabel
 } from "@mui/material";
-import { ArrowUpward } from "@mui/icons-material";
 import dayjs from "dayjs";
 import { useDebounce } from "../hooks/useDebounce";
 
@@ -12,7 +11,6 @@ const AllMedicineDetails = () => {
   const [medicines, setMedicines] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortColumn, setSortColumn] = useState("MedicineName");
   const [sortOrder, setSortOrder] = useState("asc");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -22,14 +20,20 @@ const AllMedicineDetails = () => {
 
   const fetchMedicines = useCallback(() => {
     setLoading(true);
-    fetch(`${API_URL}/api/medicine/get-medicine?page=${page + 1}&limit=${rowsPerPage}&search=${searchQueryDebounced}&sort=${sortColumn},${sortOrder}`, {
+    fetch(`${API_URL}/api/medicine/get-medicine?page=${page + 1}&limit=${rowsPerPage}&search=${searchQueryDebounced}&sort=MedicineName,${sortOrder}`, {
       headers: {
         "Authorization": `Bearer ${localStorage.getItem("token")}`,
       },
     })
       .then((res) => res.json())
       .then((data) => {
-        setMedicines(data.medicines);
+        setMedicines(data.medicines.sort((a, b) => {
+          if (sortOrder === "asc") {
+            return a.MedicineName.localeCompare(b.MedicineName);
+          } else {
+            return b.MedicineName.localeCompare(a.MedicineName);
+          }
+        }));
         setTotalRows(data.total);
         setLoading(false);
       })
@@ -37,7 +41,7 @@ const AllMedicineDetails = () => {
         console.error("Error fetching medicines:", error);
         setLoading(false);
       });
-  }, [page, rowsPerPage, searchQueryDebounced, sortColumn, sortOrder]);
+  }, [page, rowsPerPage, searchQueryDebounced, sortOrder]);
 
   useEffect(() => {
     fetchMedicines();
@@ -48,10 +52,8 @@ const AllMedicineDetails = () => {
     setPage(0);
   };
 
-  const handleSort = (column) => {
-    const isAsc = sortColumn === column && sortOrder === "asc";
-    setSortOrder(isAsc ? "desc" : "asc");
-    setSortColumn(column);
+  const handleSort = () => {
+    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
   };
 
   const handleChangePage = (event, newPage) => {
@@ -64,7 +66,7 @@ const AllMedicineDetails = () => {
   };
 
   return (
-    <TableContainer component={Paper} sx={{ maxWidth: 1300, margin: "auto", mt: 4, p: 2 }}>
+    <TableContainer component={Paper} sx={{ maxWidth: 1200, margin: "auto", mt: 4, p: 2 }}>
       <Typography variant="h5" align="center" gutterBottom>
         All Medicines
       </Typography>
@@ -77,6 +79,7 @@ const AllMedicineDetails = () => {
           onChange={handleSearch}
         />
         <Button variant="contained" onClick={fetchMedicines} color="primary">Search</Button>
+        <Button variant="contained" onClick={handleSort} color="secondary">Sort</Button>
       </Stack>
       {loading ? (
         <CircularProgress sx={{ display: "block", margin: "auto" }} />
@@ -85,17 +88,14 @@ const AllMedicineDetails = () => {
           <Table>
             <TableHead>
               <TableRow>
-                {["MedicineName", "Manufacturer", "MfgDate", "ExpiryDate", "BuyingPrice", "SellingPrice", "HowManyStrips", "MedicinePerStrip"].map((column) => (
-                  <TableCell key={column}>
-                    <TableSortLabel
-                      active={sortColumn === column}
-                      direction={sortColumn === column ? sortOrder : "asc"}
-                      onClick={() => handleSort(column)}
-                    >
-                      {column.replace(/([A-Z])/g, ' $1').trim()}
-                    </TableSortLabel>
-                  </TableCell>
-                ))}
+                <TableCell sx={{ p: 2, textAlign: "center" }}>
+                  <TableSortLabel active direction={sortOrder} onClick={handleSort}>
+                    <b>Medicine Name</b>
+                  </TableSortLabel>
+                </TableCell>
+                <TableCell sx={{ p: 2, pr: 4, textAlign: "center" }}><b>Manufacturer</b></TableCell>
+                <TableCell sx={{ p: 2, pr: 4, textAlign: "center" }}><b>Expiry Date</b></TableCell>
+                <TableCell sx={{ p: 2, pr: 4, textAlign: "center" }}><b>Selling Price</b></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -104,20 +104,10 @@ const AllMedicineDetails = () => {
                   key={medicine._id} 
                   sx={{ '&:hover': { backgroundColor: '#f0f8ff' } }}
                 >
-                  <TableCell>{medicine.MedicineName}</TableCell>
-                  <TableCell>{medicine.Manufacturer}</TableCell>
-                  <TableCell>{dayjs(medicine.MfgDate).format("DD MMM YYYY")}</TableCell>
-                  <TableCell>{dayjs(medicine.ExpiryDate).format("DD MMM YYYY")}</TableCell>
-                  <TableCell>{medicine.BuyingPrice}</TableCell>
-                  <TableCell>{medicine.SellingPrice}</TableCell>
-                  <TableCell>
-                    {medicine.HowManyStrips < 50 ? (
-                      <Chip label={`Low Stock: ${medicine.HowManyStrips}`} color="error" />
-                    ) : (
-                      medicine.HowManyStrips
-                    )}
-                  </TableCell>
-                  <TableCell>{medicine.MedicinePerStrip}</TableCell>
+                  <TableCell sx={{ p: 2, pr: 4, textAlign: "center" }}>{medicine.MedicineName}</TableCell>
+                  <TableCell sx={{ p: 2, pr: 4, textAlign: "center" }}>{medicine.Manufacturer}</TableCell>
+                  <TableCell sx={{ p: 2, pr: 4, textAlign: "center" }}>{dayjs(medicine.ExpiryDate).format("DD MMM YYYY")}</TableCell>
+                  <TableCell sx={{ p: 2, pr: 4, textAlign: "center" }}>{medicine.SellingPrice}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
