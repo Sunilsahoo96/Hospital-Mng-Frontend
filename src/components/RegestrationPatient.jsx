@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { TextField, Button, Container, Typography, Box } from "@mui/material";
+import { TextField, Button, Container, Typography, Box, Snackbar, Alert } from "@mui/material";
 const API_URL = process.env.REACT_APP_API_URL;
 
 const generateUAN = (counter) => {
@@ -22,16 +22,18 @@ function PatientRegistration() {
     alternateMobile: "",
   });
 
+  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+
   // Update UAN whenever counter changes
   useEffect(() => {
     setFormData((prevData) => ({
       ...prevData,
       uan: generateUAN(counter),
     }));
-  }, [counter]); // Runs when counter updates
+  }, [counter]);
 
   useEffect(() => {
-    setCounter((prev) => prev + 1); // Increment counter once when the component mounts
+    setCounter((prev) => prev + 1);
   }, []);
 
   const handleChange = (e) => {
@@ -49,14 +51,12 @@ function PatientRegistration() {
       });
 
       if (response.ok) {
-        alert("Patient Registered Successfully!");
+        setSnackbar({ open: true, message: "Patient Registered Successfully!", severity: "success" });
 
-        // Increment counter for next UAN
         const newCounter = counter + 1;
         setCounter(newCounter);
         localStorage.setItem("uanCounter", newCounter);
 
-        // Reset form with new UAN
         setFormData({
           uan: generateUAN(newCounter),
           patientName: "",
@@ -65,15 +65,19 @@ function PatientRegistration() {
           mobile: "",
           alternateMobile: "",
         });
+      } else {
+        const errorData = await response.json();
+        setSnackbar({ open: true, message: errorData.message || "Registration failed", severity: "error" });
       }
     } catch (error) {
+      setSnackbar({ open: true, message: "Error registering patient", severity: "error" });
       console.error("Registration error:", error);
     }
   };
 
   return (
     <Container maxWidth="sm">
-      <Box sx={{ mt: 4, p: 3, boxShadow: 3, borderRadius: 2 }}>
+      <Box sx={{ mt: 4, p: 3, boxShadow: 3, borderRadius: 2, backgroundColor: "white" }}>
         <Typography variant="h5" gutterBottom>
           Patient Registration
         </Typography>
@@ -89,6 +93,13 @@ function PatientRegistration() {
           </Button>
         </form>
       </Box>
+
+      {/* Snackbar for notifications */}
+      <Snackbar open={snackbar.open} autoHideDuration={4000} onClose={() => setSnackbar({ ...snackbar, open: false })}>
+        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: "100%", background: "#50C878", color: "#ffffff" }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 }
