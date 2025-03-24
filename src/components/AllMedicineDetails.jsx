@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, CircularProgress, TextField, IconButton, Stack, Button, TablePagination } from "@mui/material";
 import { ArrowUpward } from "@mui/icons-material";
 import dayjs from "dayjs";
+import { useDebounce } from "../hooks/useDebounce"; // Import debounce hook
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -14,9 +15,11 @@ const AllMedicineDetails = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [totalRows, setTotalRows] = useState(0);
 
+  const searchQueryDebounced = useDebounce(searchQuery, 500); // Apply debounce
+
   const fetchMedicines = useCallback(() => {
     setLoading(true);
-    fetch(`${API_URL}/api/medicine/get-medicine?page=${page + 1}&limit=${rowsPerPage}&search=${searchQuery}&sort=${sortOrder}`, {
+    fetch(`${API_URL}/api/medicine/get-medicine?page=${page + 1}&limit=${rowsPerPage}&search=${searchQueryDebounced}&sort=${sortOrder}`, {
       headers: {
         "Authorization": `Bearer ${localStorage.getItem("token")}`,
       },
@@ -31,14 +34,14 @@ const AllMedicineDetails = () => {
         console.error("Error fetching medicines:", error);
         setLoading(false);
       });
-  }, [page, rowsPerPage, searchQuery, sortOrder]);
+  }, [page, rowsPerPage, searchQueryDebounced, sortOrder]);
 
   useEffect(() => {
     fetchMedicines();
   }, [fetchMedicines]);
 
   const handleSearch = (e) => {
-    setSearchQuery(e.target.value);
+    setSearchQuery(e.target.value); // Update searchQuery but wait for debounce
     setPage(0);
   };
 
@@ -56,7 +59,7 @@ const AllMedicineDetails = () => {
   };
 
   return (
-    <TableContainer component={Paper} sx={{ maxWidth: 1100, margin: "auto", mt: 4, p: 2 }}>
+    <TableContainer component={Paper} sx={{ maxWidth: 1200, margin: "auto", mt: 4, p: 2 }}>
       <Typography variant="h5" align="center" gutterBottom>
         All Medicines
       </Typography>
@@ -86,18 +89,26 @@ const AllMedicineDetails = () => {
                 <TableCell sx={{ width: 180 }}><b>Expiry Date</b></TableCell>
                 <TableCell sx={{ width: 150 }}><b>Buying Price</b></TableCell>
                 <TableCell sx={{ width: 150 }}><b>Selling Price</b></TableCell>
+                <TableCell sx={{ width: 180 }}><b>How Many Strips</b></TableCell>
                 <TableCell sx={{ width: 120 }}><b>Per Strip</b></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {medicines.map((medicine) => (
-                <TableRow key={medicine._id} sx={{ '&:hover': { backgroundColor: '#f0f8ff' } }}>
+                <TableRow 
+                  key={medicine._id} 
+                  sx={{ 
+                    '&:hover': { backgroundColor: '#f0f8ff' }, 
+                    backgroundColor: medicine.HowManyStrips < 50 ? '#FFCCCB' : 'inherit' // Red background for low stock
+                  }}
+                >
                   <TableCell>{medicine.MedicineName}</TableCell>
                   <TableCell>{medicine.Manufacturer}</TableCell>
                   <TableCell>{dayjs(medicine.MfgDate).format("DD MMM YYYY")}</TableCell>
                   <TableCell>{dayjs(medicine.ExpiryDate).format("DD MMM YYYY")}</TableCell>
                   <TableCell>{medicine.BuyingPrice}</TableCell>
                   <TableCell>{medicine.SellingPrice}</TableCell>
+                  <TableCell>{medicine.HowManyStrips}</TableCell>
                   <TableCell>{medicine.MedicinePerStrip}</TableCell>
                 </TableRow>
               ))}
