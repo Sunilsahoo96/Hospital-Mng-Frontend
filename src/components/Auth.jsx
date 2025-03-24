@@ -28,7 +28,7 @@ const Auth = () => {
 
         try {
             const response = await axios.post(`http://localhost:8000/api/auth/${endpoint}`, formData);
-
+            
             if (isLogin) {
                 // Login successful: store token and redirect to dashboard
                 localStorage.setItem("token", response.data.token);
