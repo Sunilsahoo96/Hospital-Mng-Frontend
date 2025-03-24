@@ -27,6 +27,7 @@ const AllMedicineDetails = () => {
     })
       .then((res) => res.json())
       .then((data) => {
+       
         setMedicines(data.medicines.sort((a, b) => {
           if (sortOrder === "asc") {
             return a.MedicineName.localeCompare(b.MedicineName);
