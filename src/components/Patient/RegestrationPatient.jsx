@@ -10,7 +10,7 @@ const generateUAN = (counter) => {
 
 function PatientRegistration() {
   const [counter, setCounter] = useState(() => {
-    return Number(localStorage.getItem("uanCounter")) || 1; // Get counter from localStorage
+    return Number(localStorage.getItem("uanCounter")) || 1; 
   });
 
   const [formData, setFormData] = useState({
