@@ -27,13 +27,10 @@ const AllMedicineDetails = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-       
         setMedicines(data.medicines.sort((a, b) => {
-          if (sortOrder === "asc") {
-            return a.MedicineName.localeCompare(b.MedicineName);
-          } else {
-            return b.MedicineName.localeCompare(a.MedicineName);
-          }
+          return sortOrder === "asc"
+            ? a.MedicineName.localeCompare(b.MedicineName)
+            : b.MedicineName.localeCompare(a.MedicineName);
         }));
         setTotalRows(data.total);
         setLoading(false);
@@ -80,7 +77,6 @@ const AllMedicineDetails = () => {
           onChange={handleSearch}
         />
         <Button variant="contained" onClick={fetchMedicines} color="primary">Search</Button>
-        <Button variant="contained" onClick={handleSort} color="secondary">Sort</Button>
       </Stack>
       {loading ? (
         <CircularProgress sx={{ display: "block", margin: "auto" }} />
@@ -90,27 +86,43 @@ const AllMedicineDetails = () => {
             <TableHead>
               <TableRow>
                 <TableCell sx={{ p: 2, textAlign: "center" }}>
-                  <TableSortLabel active direction={sortOrder} onClick={handleSort}>
+                  <TableSortLabel active direction={sortOrder} onClick={handleSort} sx={{
+                    color: "black",
+                    "& .MuiTableSortLabel-icon": { color: "black !important" },
+                  }}>
                     <b>Medicine Name</b>
                   </TableSortLabel>
                 </TableCell>
-                <TableCell sx={{ p: 2, pr: 4, textAlign: "center" }}><b>Manufacturer</b></TableCell>
-                <TableCell sx={{ p: 2, pr: 4, textAlign: "center" }}><b>Expiry Date</b></TableCell>
-                <TableCell sx={{ p: 2, pr: 4, textAlign: "center" }}><b>Selling Price</b></TableCell>
+                <TableCell sx={{ p: 2, textAlign: "center" }}><b>Manufacturer</b></TableCell>
+                <TableCell sx={{ p: 2, textAlign: "center" }}><b>Expiry Date</b></TableCell>
+                <TableCell sx={{ p: 2, textAlign: "center" }}><b>Selling Price</b></TableCell>
+                <TableCell sx={{ p: 2, textAlign: "center" }}><b>Total Count of Medicine</b></TableCell> {/* New Column */}
               </TableRow>
             </TableHead>
             <TableBody>
-              {medicines.map((medicine) => (
-                <TableRow 
-                  key={medicine._id} 
-                  sx={{ '&:hover': { backgroundColor: '#f0f8ff' } }}
-                >
-                  <TableCell sx={{ p: 2, pr: 4, textAlign: "center" }}>{medicine.MedicineName}</TableCell>
-                  <TableCell sx={{ p: 2, pr: 4, textAlign: "center" }}>{medicine.Manufacturer}</TableCell>
-                  <TableCell sx={{ p: 2, pr: 4, textAlign: "center" }}>{dayjs(medicine.ExpiryDate).format("DD MMM YYYY")}</TableCell>
-                  <TableCell sx={{ p: 2, pr: 4, textAlign: "center" }}>{medicine.SellingPrice}</TableCell>
+              {medicines.length > 0 ? (
+                medicines.map((medicine) => {
+                  // Calculate total count of medicines
+                  const totalCount = (medicine.HowManyStrips || 0) * (medicine.MedicinePerStrip || 0);
+                  return (
+                    <TableRow key={medicine._id} sx={{ '&:hover': { backgroundColor: '#f0f8ff' } }}>
+                      <TableCell sx={{ p: 2, textAlign: "center" }}>{medicine.MedicineName}</TableCell>
+                      <TableCell sx={{ p: 2, textAlign: "center" }}>{medicine.Manufacturer}</TableCell>
+                      <TableCell sx={{ p: 2, textAlign: "center" }}>
+                        {dayjs(medicine.ExpiryDate).format("DD MMM YYYY")}
+                      </TableCell>
+                      <TableCell sx={{ p: 2, textAlign: "center" }}>{medicine.SellingPrice}</TableCell>
+                      <TableCell sx={{ p: 2, textAlign: "center" }}>{totalCount}</TableCell> {/* New Column */}
+                    </TableRow>
+                  );
+                })
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={5} sx={{ textAlign: "center", py: 3, fontSize: "15px", color: "red" }}>
+                    No medicines found
+                  </TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
           <TablePagination
