@@ -5,3 +5,7 @@
   font-optical-sizing: auto;
   font-style: normal;
 }
+
+.drawer{
+  background-image: radial-gradient(circle at 30% 30%, #30475E, #0D1B2A);
+}

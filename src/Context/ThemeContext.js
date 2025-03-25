@@ -11,19 +11,30 @@ export const ThemeProviderWrapper = ({ children }) => {
     setThemeMode((prev) => (prev === "light" ? "dark" : "light"));
   };
 
-  // Define MUI theme with global font
+  // Define MUI theme
   const theme = useMemo(
     () =>
       createTheme({
-        palette: { mode: themeMode },
+        palette: {
+          mode: themeMode,
+          background: { default: themeMode === "dark" ? "#121212" : "#fff" },
+          text: { primary: themeMode === "dark" ? "#fff" : "#000" },
+        },
         typography: {
-          fontFamily: `"Winky Sans", sans-serif`, // ✅ Apply globally via MUI
+          fontFamily: `"Winky Sans", sans-serif`,
+          allVariants: {
+            color: themeMode === "dark" ? "#fff" : "#000",
+          },
         },
         components: {
           MuiCssBaseline: {
             styleOverrides: {
               body: {
-                fontFamily: `"Winky Sans", sans-serif`,
+                backgroundColor: themeMode === "dark" ? "#0D1B2A" : "#ffffff",
+                backgroundImage: themeMode === "dark"
+                ? "radial-gradient(circle at 30% 30%, #30475E, #0D1B2A)" // 🌙 Gradient Effect
+                : "none",
+                color: themeMode === "dark" ? "#fff" : "#000",
               },
             },
           },
