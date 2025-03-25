@@ -58,8 +58,9 @@ const Auth = () => {
     };
 
     return (
-        <Container maxWidth="xs">
-            <Paper elevation={6} className="auth-container">
+       <div className="d-flex justify-content-center align-items-center" style={{height:"100vh"}}>
+         <Container maxWidth="sm">
+            <Paper elevation={6} className="auth-container" sx={{ width: "350px", padding: 3 }} >
                 <Typography variant="h5" className="auth-heading">
                     {isLogin ? "Worker Login" : "Worker Sign Up"}
                 </Typography>
@@ -160,7 +161,9 @@ const Auth = () => {
                 </Alert>
             </Snackbar>
         </Container>
-    );
+
+       </div>    
+       );
 };
 
 export default Auth;

@@ -1,13 +1,15 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback,useContext } from "react";
 import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, CircularProgress, TextField, Stack, Button, TablePagination, TableSortLabel
 } from "@mui/material";
 import dayjs from "dayjs";
 import { useDebounce } from "../hooks/useDebounce";
+import ThemeContext from "../Context/ThemeContext";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 const AllMedicineDetails = () => {
+  const { themeMode } = useContext(ThemeContext);
   const [medicines, setMedicines] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -15,6 +17,7 @@ const AllMedicineDetails = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [totalRows, setTotalRows] = useState(0);
+  
 
   const searchQueryDebounced = useDebounce(searchQuery, 500);
 
@@ -64,7 +67,7 @@ const AllMedicineDetails = () => {
   };
 
   return (
-    <TableContainer component={Paper} sx={{ maxWidth: 1200, margin: "auto", mt: 4, p: 2 }}>
+    <TableContainer component={Paper} sx={{ maxWidth: 2000, margin: "auto", mt: 4, p: 2, fontFamily:"Winky Sans, sans-serif", fontOpticalSizing: "auto", fontWeight:500,fontStyle:"normal" }}>
       <Typography variant="h5" align="center" gutterBottom>
         All Medicines
       </Typography>

@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { TextField, Button, Container, Typography, Box, Snackbar, Alert } from "@mui/material";
+import ThemeContext from "../Context/ThemeContext";
+
 const API_URL = process.env.REACT_APP_API_URL;
 
 const generateUAN = (counter) => {
@@ -9,8 +11,10 @@ const generateUAN = (counter) => {
 };
 
 function PatientRegistration() {
+  const { themeMode } = useContext(ThemeContext);
+
   const [counter, setCounter] = useState(() => {
-    return Number(localStorage.getItem("uanCounter")) || 1; // Get counter from localStorage
+    return Number(localStorage.getItem("uanCounter")) || 1;
   });
 
   const [formData, setFormData] = useState({
@@ -24,7 +28,6 @@ function PatientRegistration() {
 
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
 
-  // Update UAN whenever counter changes
   useEffect(() => {
     setFormData((prevData) => ({
       ...prevData,
@@ -42,7 +45,6 @@ function PatientRegistration() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const response = await fetch(`${API_URL}/api/patient/registration`, {
         method: "POST",
@@ -52,11 +54,9 @@ function PatientRegistration() {
 
       if (response.ok) {
         setSnackbar({ open: true, message: "Patient Registered Successfully!", severity: "success" });
-
         const newCounter = counter + 1;
         setCounter(newCounter);
         localStorage.setItem("uanCounter", newCounter);
-
         setFormData({
           uan: generateUAN(newCounter),
           patientName: "",
@@ -77,26 +77,38 @@ function PatientRegistration() {
 
   return (
     <Container maxWidth="sm">
-      <Box sx={{ mt: 4, p: 3, boxShadow: 3, borderRadius: 2, backgroundColor: "white" }}>
+      <Box
+        sx={{
+          mt: 4,
+          p: 3,
+          boxShadow: 3,
+          borderRadius: 2,
+          bgcolor: themeMode === "dark" ? "#333" : "#fff",
+          color: themeMode === "dark" ? "#fff" : "#000",
+        }}
+      >
         <Typography variant="h5" gutterBottom>
           Patient Registration
         </Typography>
         <form onSubmit={handleSubmit}>
-          <TextField fullWidth margin="normal" label="UAN Number" name="uan" value={formData.uan} disabled />
-          <TextField fullWidth margin="normal" label="Patient Name" name="patientName" value={formData.patientName} onChange={handleChange} required />
-          <TextField fullWidth margin="normal" label="Guardian Name" name="guardianName" value={formData.guardianName} onChange={handleChange} required />
-          <TextField fullWidth margin="normal" label="Address" name="address" value={formData.address} onChange={handleChange} multiline rows={3} required />
-          <TextField fullWidth margin="normal" label="Mobile Number" name="mobile" value={formData.mobile} onChange={handleChange} required />
-          <TextField fullWidth margin="normal" label="Alternate Mobile Number" name="alternateMobile" value={formData.alternateMobile} onChange={handleChange} />
+          <TextField fullWidth margin="normal" label="UAN Number" name="uan" value={formData.uan} disabled InputProps={{ style: { color: themeMode === "dark" ? "#fff" : "#000" } }} />
+          <TextField fullWidth margin="normal" label="Patient Name" name="patientName" value={formData.patientName} onChange={handleChange} required InputProps={{ style: { color: themeMode === "dark" ? "#fff" : "#000" } }} />
+          <TextField fullWidth margin="normal" label="Guardian Name" name="guardianName" value={formData.guardianName} onChange={handleChange} required InputProps={{ style: { color: themeMode === "dark" ? "#fff" : "#000" } }} />
+          <TextField fullWidth margin="normal" label="Address" name="address" value={formData.address} onChange={handleChange} multiline rows={3} required InputProps={{ style: { color: themeMode === "dark" ? "#fff" : "#000" } }} />
+          <TextField fullWidth margin="normal" label="Mobile Number" name="mobile" value={formData.mobile} onChange={handleChange} required InputProps={{ style: { color: themeMode === "dark" ? "#fff" : "#000" } }} />
+          <TextField fullWidth margin="normal" label="Alternate Mobile Number" name="alternateMobile" value={formData.alternateMobile} onChange={handleChange} InputProps={{ style: { color: themeMode === "dark" ? "#fff" : "#000" } }} />
           <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
             Register
           </Button>
         </form>
       </Box>
 
-      {/* Snackbar for notifications */}
       <Snackbar open={snackbar.open} autoHideDuration={4000} onClose={() => setSnackbar({ ...snackbar, open: false })}>
-        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: "100%", background: "#50C878", color: "#ffffff" }}>
+        <Alert
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+          severity={snackbar.severity}
+          sx={{ width: "100%", bgcolor: themeMode === "dark" ? "#444" : "#50C878", color: "#fff" }}
+        >
           {snackbar.message}
         </Alert>
       </Snackbar>
