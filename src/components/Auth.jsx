@@ -32,6 +32,9 @@ const Auth = () => {
             if (isLogin) {
                 // Login successful: store token and redirect to dashboard
                 localStorage.setItem("token", response.data.token);
+                localStorage.setItem("userName", response.data.name); 
+                
+                console.log("Stored Name:", localStorage.getItem("userName"));
                 setLoginSuccess(true);
                 setTimeout(() => navigate("/dashboard"), 2000);
             } else {
