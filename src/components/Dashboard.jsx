@@ -68,7 +68,7 @@ const DashboardLayout = () => {
                         background: themeMode === "dark"
                             ? "radial-gradient(circle at 30% 30%, #30475E, #0D1B2A)" // 🌙 Dark Mode
                             : "#ffffff", // ☀️ Light Mode
-                        color: themeMode === "dark" ? "white" : "black",
+                        color: themeMode === "dark" ? "" : "black",
                     },
                 }}
             >

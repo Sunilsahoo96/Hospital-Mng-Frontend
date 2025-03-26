@@ -4,7 +4,9 @@ import "../Hospital.css"; // Import the CSS file
 function Home() {
   return (
     <div className="container">
-      <h2 className="heading mt-5">🏥 Welcome to the Hospital Management System</h2>
+      <h2 className="heading mt-5">
+  🏥 <span>Welcome to the Hospital Management System</span>
+</h2>
 
       <div className="button-container d-flex justify-content-center align-items-center" style={{height:"70vh"}}>
         <Link to="/auth" className="link">

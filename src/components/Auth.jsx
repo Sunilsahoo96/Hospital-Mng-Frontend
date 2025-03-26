@@ -18,6 +18,10 @@ const Auth = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const getDashboardRoute = (role) => {
+        return `/${role.replace(/\s+/g, "-").toLowerCase()}-dashboard`;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrorMessage(""); 
@@ -32,11 +36,16 @@ const Auth = () => {
             if (isLogin) {
                 // Login successful: store token and redirect to dashboard
                 localStorage.setItem("token", response.data.token);
-                localStorage.setItem("userName", response.data.name); 
+                localStorage.setItem("userName", response.data.name);
+                localStorage.setItem("userRole", response.data.role); 
                 
                 console.log("Stored Name:", localStorage.getItem("userName"));
+                console.log("Stored Role:", localStorage.getItem("userRole"));
                 setLoginSuccess(true);
-                setTimeout(() => navigate("/dashboard"), 2000);
+
+                setTimeout(() => navigate(getDashboardRoute(response.data.role)), 2000);        //role based navigation
+
+
             } else {
                 // Signup successful: show Snackbar alert
                 setSignupSuccess(true);

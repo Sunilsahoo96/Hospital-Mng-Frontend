@@ -46,7 +46,7 @@ const AllMedicineDetails = () => {
   }, [fetchMedicines]);
 
   return (
-    <div style={{ height: "90vh" }}>
+    <div style={{ height: "89vh" }}>
       <TableContainer
         component={Paper}
         sx={{
