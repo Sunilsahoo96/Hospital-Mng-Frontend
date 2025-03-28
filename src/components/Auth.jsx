@@ -70,10 +70,14 @@ const Auth = () => {
 
     const endpoint = isLogin ? "login" : "signup";
 
+    const requestData = isLogin
+      ? { email: formData.email, password: formData.password }
+      : formData;
+
     try {
       const response = await axios.post(
         `http://localhost:8000/api/auth/${endpoint}`,
-        formData
+        requestData
       );
 
       if (isLogin) {
@@ -100,8 +104,10 @@ const Auth = () => {
 
       if (error.response?.status === 400) {
         setErrorMessage("Invalid email format. Please enter a valid email.");
+        setEmailExists(true);
       } else if (error.response?.status === 401) {
         setErrorMessage("Incorrect email or password. Please try again.");
+        setEmailExists(true);
       } else if (error.response?.status === 409) {
         setErrorMessage(errorMsg); 
         setEmailExists(true); 
@@ -144,7 +150,7 @@ const Auth = () => {
               className="auth-input"
               name="email"
               label="Email"
-              type="email"
+              type="text"
               variant="outlined"
               value={formData.email}
               onChange={handleChange}
@@ -244,6 +250,7 @@ const Auth = () => {
             {errorMessage} 
           </Alert>
         </Snackbar>
+        
       </Container>
     </div>
   );
