@@ -5,8 +5,8 @@ import {
 } from "@mui/material";
 import { Brightness4, Brightness7 } from "@mui/icons-material"; // Icons for toggle
 import dayjs from "dayjs";
-import { useDebounce } from "../hooks/useDebounce";
-import ThemeContext from "../Context/ThemeContext";
+import { useDebounce } from "../../hooks/useDebounce";
+import ThemeContext from "../../Context/ThemeContext";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
