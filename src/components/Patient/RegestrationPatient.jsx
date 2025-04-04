@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { TextField, Button, Container, Typography, Box, Snackbar, Alert } from "@mui/material";
+import CustomSnackbar from "../Snackbar";
 const API_URL = process.env.REACT_APP_API_URL;
 
 const generateUAN = (counter) => {
@@ -94,12 +95,13 @@ function PatientRegistration() {
         </form>
       </Box>
 
-      {/* Snackbar for notifications */}
-      <Snackbar open={snackbar.open} autoHideDuration={4000} onClose={() => setSnackbar({ ...snackbar, open: false })}>
-        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: "100%", background: "#50C878", color: "#ffffff" }}>
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
+      <CustomSnackbar
+        open={snackbar.open}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        message={snackbar.message}
+        severity={snackbar.severity}
+        autoHideDuration={4000}
+      />
     </Container>
   );
 }
