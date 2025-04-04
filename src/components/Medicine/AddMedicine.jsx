@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { TextField, Button, Card, CardContent, Typography, Snackbar, Alert, Stack } from "@mui/material";
-
-
+import CustomSnackbar from "../Snackbar";
 const API_URL = process.env.REACT_APP_API_URL;
 
 const AddMedicine = () => {
@@ -111,11 +110,13 @@ const AddMedicine = () => {
           </Stack>
         </form>
       </CardContent>
-      <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: "top", horizontal: "center" }}>
-        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: "100%", background: "#50C878", color: "#ffffff" }}>
-          Medicine Added Successfully!
-        </Alert>
-      </Snackbar>
+      <CustomSnackbar
+        open={openSnackbar}
+        onClose={handleCloseSnackbar}
+        message="Medicine Added Successfully!"
+        severity="success"
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      />
     </Card>
   );
 };
