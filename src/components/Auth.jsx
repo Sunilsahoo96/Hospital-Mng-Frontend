@@ -24,7 +24,7 @@ const Auth = () => {
     role: "doctor",
   });
   const [loginSuccess, setLoginSuccess] = useState(false);
-  const [signupSuccess, setSignupSuccess] = useState(false); 
+  const [signupSuccess, setSignupSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [emailExists, setEmailExists] = useState(false);
 
@@ -48,25 +48,25 @@ const Auth = () => {
     e.preventDefault();
     setErrorMessage("");
     setLoginSuccess(false);
-    setSignupSuccess(false); 
+    setSignupSuccess(false);
 
     if (!isLogin) {
-        // Validate password strength
-        if (!validatePassword(formData.password)) {
-          setErrorMessage(
-            "Password must be at least 8 characters, contain an uppercase letter, a lowercase letter, a number, and a special character."
-          );
-          setEmailExists(true); 
-          return;
-        }
-  
-        // Confirm password match
-        if (formData.password !== formData.confirmPassword) {
-          setErrorMessage("Passwords do not match.");
-          setEmailExists(true); 
-          return;
-        }
+      // Validate password strength
+      if (!validatePassword(formData.password)) {
+        setErrorMessage(
+          "Password must be at least 8 characters, contain an uppercase letter, a lowercase letter, a number, and a special character."
+        );
+        setEmailExists(true);
+        return;
       }
+
+      // Confirm password match
+      if (formData.password !== formData.confirmPassword) {
+        setErrorMessage("Passwords do not match.");
+        setEmailExists(true);
+        return;
+      }
+    }
 
     const endpoint = isLogin ? "login" : "signup";
 
@@ -85,9 +85,6 @@ const Auth = () => {
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("userName", response.data.name);
         localStorage.setItem("userRole", response.data.role);
-
-        console.log("Stored Name:", localStorage.getItem("userName"));
-        console.log("Stored Role:", localStorage.getItem("userRole"));
         setLoginSuccess(true);
 
         setTimeout(() => navigate(getDashboardRoute(response.data.role)), 2000); //role based navigation
@@ -109,8 +106,8 @@ const Auth = () => {
         setErrorMessage("Incorrect email or password. Please try again.");
         setEmailExists(true);
       } else if (error.response?.status === 409) {
-        setErrorMessage(errorMsg); 
-        setEmailExists(true); 
+        setErrorMessage(errorMsg);
+        setEmailExists(true);
       } else {
         setErrorMessage(errorMsg);
       }
@@ -131,8 +128,6 @@ const Auth = () => {
           <Typography variant="h5" className="auth-heading">
             {isLogin ? "Worker Login" : "Worker Sign Up"}
           </Typography>
-
-        
 
           <form onSubmit={handleSubmit} className="auth-form">
             {!isLogin && (
@@ -166,7 +161,7 @@ const Auth = () => {
               onChange={handleChange}
               required
             />
-              {!isLogin && (
+            {!isLogin && (
               <TextField
                 className="auth-input"
                 name="confirmPassword"
@@ -247,10 +242,9 @@ const Auth = () => {
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
         >
           <Alert severity="error" sx={{ width: "100%" }}>
-            {errorMessage} 
+            {errorMessage}
           </Alert>
         </Snackbar>
-        
       </Container>
     </div>
   );

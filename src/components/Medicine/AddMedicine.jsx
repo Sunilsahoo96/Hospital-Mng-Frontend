@@ -1,10 +1,18 @@
 import { useState } from "react";
-import { TextField, Button, Card, CardContent, Typography, Snackbar, Alert, Stack } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Card,
+  CardContent,
+  Typography,
+  Snackbar,
+  Alert,
+  Stack,
+} from "@mui/material";
 import CustomSnackbar from "../Snackbar";
 const API_URL = process.env.REACT_APP_API_URL;
 
 const AddMedicine = () => {
-  
   const [formData, setFormData] = useState({
     MedicineName: "",
     Manufacturer: "",
@@ -13,7 +21,7 @@ const AddMedicine = () => {
     BuyingPrice: "",
     SellingPrice: "",
     MedicinePerStrip: "",
-    HowManyStrips: "",  // Added strip count field
+    HowManyStrips: "", // Added strip count field
   });
 
   const [error, setError] = useState("");
@@ -22,7 +30,11 @@ const AddMedicine = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === "ExpiryDate" && formData.MfgDate && value <= formData.MfgDate) {
+    if (
+      name === "ExpiryDate" &&
+      formData.MfgDate &&
+      value <= formData.MfgDate
+    ) {
       setError("Expiry date must be after manufacturing date.");
     } else {
       setError("");
@@ -38,7 +50,7 @@ const AddMedicine = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
       body: JSON.stringify(formData),
     })
@@ -54,7 +66,7 @@ const AddMedicine = () => {
             BuyingPrice: "",
             SellingPrice: "",
             MedicinePerStrip: "",
-            HowManyStrips: "",  // Reset strip count
+            HowManyStrips: "", // Reset strip count
           });
         }
       })
@@ -87,24 +99,105 @@ const AddMedicine = () => {
           Add Medicine
         </Typography>
         <form onSubmit={handleSubmit}>
-          <TextField label="Medicine Name" name="MedicineName" fullWidth margin="normal" value={formData.MedicineName} onChange={handleChange} required />
-          <TextField label="Manufacturer" name="Manufacturer" fullWidth margin="normal" value={formData.Manufacturer} onChange={handleChange} required />
+          <TextField
+            label="Medicine Name"
+            name="MedicineName"
+            fullWidth
+            margin="normal"
+            value={formData.MedicineName}
+            onChange={handleChange}
+            required
+          />
+          <TextField
+            label="Manufacturer"
+            name="Manufacturer"
+            fullWidth
+            margin="normal"
+            value={formData.Manufacturer}
+            onChange={handleChange}
+            required
+          />
           <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
-            <TextField label="Manufacturing Date" type="date" name="MfgDate" fullWidth InputLabelProps={{ shrink: true }} margin="normal" value={formData.MfgDate} onChange={handleChange} required />
-            <TextField label="Expiry Date" type="date" name="ExpiryDate" fullWidth InputLabelProps={{ shrink: true }} margin="normal" value={formData.ExpiryDate} onChange={handleChange} required />
+            <TextField
+              label="Manufacturing Date"
+              type="date"
+              name="MfgDate"
+              fullWidth
+              InputLabelProps={{ shrink: true }}
+              margin="normal"
+              value={formData.MfgDate}
+              onChange={handleChange}
+              required
+            />
+            <TextField
+              label="Expiry Date"
+              type="date"
+              name="ExpiryDate"
+              fullWidth
+              InputLabelProps={{ shrink: true }}
+              margin="normal"
+              value={formData.ExpiryDate}
+              onChange={handleChange}
+              required
+            />
           </Stack>
-          {error && <Typography color="error" variant="body2">{error}</Typography>}
+          {error && (
+            <Typography color="error" variant="body2">
+              {error}
+            </Typography>
+          )}
           <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
-            <TextField label="Buying Price" type="number" name="BuyingPrice" fullWidth margin="normal" value={formData.BuyingPrice} onChange={handleChange} required />
-            <TextField label="Selling Price" type="number" name="SellingPrice" fullWidth margin="normal" value={formData.SellingPrice} onChange={handleChange} required />
+            <TextField
+              label="Buying Price"
+              type="number"
+              name="BuyingPrice"
+              fullWidth
+              margin="normal"
+              value={formData.BuyingPrice}
+              onChange={handleChange}
+              required
+            />
+            <TextField
+              label="Selling Price"
+              type="number"
+              name="SellingPrice"
+              fullWidth
+              margin="normal"
+              value={formData.SellingPrice}
+              onChange={handleChange}
+              required
+            />
           </Stack>
-          <TextField label="Medicines per Strip" type="number" name="MedicinePerStrip" fullWidth margin="normal" value={formData.MedicinePerStrip} onChange={handleChange} required />
-          <TextField label="How Many Strips" type="number" name="HowManyStrips" fullWidth margin="normal" value={formData.HowManyStrips} onChange={handleChange} required />
+          <TextField
+            label="Medicines per Strip"
+            type="number"
+            name="MedicinePerStrip"
+            fullWidth
+            margin="normal"
+            value={formData.MedicinePerStrip}
+            onChange={handleChange}
+            required
+          />
+          <TextField
+            label="How Many Strips"
+            type="number"
+            name="HowManyStrips"
+            fullWidth
+            margin="normal"
+            value={formData.HowManyStrips}
+            onChange={handleChange}
+            required
+          />
           <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
             <Button variant="outlined" fullWidth onClick={handleCancel}>
               Cancel
             </Button>
-            <Button type="submit" variant="contained" fullWidth disabled={isFormIncomplete}>
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
+              disabled={isFormIncomplete}
+            >
               Add Medicine
             </Button>
           </Stack>
