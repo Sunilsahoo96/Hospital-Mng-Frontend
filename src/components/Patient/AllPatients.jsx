@@ -19,7 +19,7 @@ const API_URL = process.env.REACT_APP_API_URL;
 const AllPatients = () => {
   const [patients, setPatients] = useState([]);
   const headers = [
-    "UAN Number",
+    "PUN Number",
     "Patient Name",
     "Guardian Name",
     "Address",
@@ -72,7 +72,7 @@ const AllPatients = () => {
           <TableBody>
             {patients.map((patient, index) => (
               <TableRow key={index}>
-                <TableCell>{patient.uan}</TableCell>
+                <TableCell>{patient.pun}</TableCell>
                 <TableCell>{patient.patientName}</TableCell>
                 <TableCell>{patient.guardianName}</TableCell>
                 <TableCell>{patient.address}</TableCell>
