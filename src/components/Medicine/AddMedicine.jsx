@@ -9,7 +9,12 @@ import {
   Alert,
   Stack,
 } from "@mui/material";
+<<<<<<< HEAD
 import apiRequest from "../../api/api"; 
+=======
+import CustomSnackbar from "../Snackbar";
+const API_URL = process.env.REACT_APP_API_URL;
+>>>>>>> 3dc968f1651efb0719b46db62e67176b7698754f
 
 const AddMedicine = () => {
   const [formData, setFormData] = useState({
@@ -20,7 +25,11 @@ const AddMedicine = () => {
     BuyingPrice: "",
     SellingPrice: "",
     MedicinePerStrip: "",
+<<<<<<< HEAD
     HowManyStrips: "",
+=======
+    HowManyStrips: "", // Added strip count field
+>>>>>>> 3dc968f1651efb0719b46db62e67176b7698754f
   });
 
   const [error, setError] = useState("");
@@ -29,7 +38,11 @@ const AddMedicine = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === "ExpiryDate" && formData.MfgDate && value <= formData.MfgDate) {
+    if (
+      name === "ExpiryDate" &&
+      formData.MfgDate &&
+      value <= formData.MfgDate
+    ) {
       setError("Expiry date must be after manufacturing date.");
     } else {
       setError("");
@@ -41,6 +54,7 @@ const AddMedicine = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+<<<<<<< HEAD
     try {
       const res = await apiRequest({
         endpoint: "/api/medicine/add-medicine",
@@ -64,6 +78,33 @@ const AddMedicine = () => {
     } catch (err) {
       console.error("Error:", err.message);
     }
+=======
+    fetch(`${API_URL}/api/medicine/add-medicine`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.message) {
+          setOpenSnackbar(true);
+          setFormData({
+            MedicineName: "",
+            Manufacturer: "",
+            MfgDate: "",
+            ExpiryDate: "",
+            BuyingPrice: "",
+            SellingPrice: "",
+            MedicinePerStrip: "",
+            HowManyStrips: "", // Reset strip count
+          });
+        }
+      })
+      .catch((error) => console.error("Error:", error));
+>>>>>>> 3dc968f1651efb0719b46db62e67176b7698754f
   };
 
   const handleCancel = () => {
@@ -92,34 +133,117 @@ const AddMedicine = () => {
           Add Medicine
         </Typography>
         <form onSubmit={handleSubmit}>
-          <TextField label="Medicine Name" name="MedicineName" fullWidth margin="normal" value={formData.MedicineName} onChange={handleChange} required />
-          <TextField label="Manufacturer" name="Manufacturer" fullWidth margin="normal" value={formData.Manufacturer} onChange={handleChange} required />
+          <TextField
+            label="Medicine Name"
+            name="MedicineName"
+            fullWidth
+            margin="normal"
+            value={formData.MedicineName}
+            onChange={handleChange}
+            required
+          />
+          <TextField
+            label="Manufacturer"
+            name="Manufacturer"
+            fullWidth
+            margin="normal"
+            value={formData.Manufacturer}
+            onChange={handleChange}
+            required
+          />
           <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
-            <TextField label="Manufacturing Date" type="date" name="MfgDate" fullWidth InputLabelProps={{ shrink: true }} margin="normal" value={formData.MfgDate} onChange={handleChange} required />
-            <TextField label="Expiry Date" type="date" name="ExpiryDate" fullWidth InputLabelProps={{ shrink: true }} margin="normal" value={formData.ExpiryDate} onChange={handleChange} required />
+            <TextField
+              label="Manufacturing Date"
+              type="date"
+              name="MfgDate"
+              fullWidth
+              InputLabelProps={{ shrink: true }}
+              margin="normal"
+              value={formData.MfgDate}
+              onChange={handleChange}
+              required
+            />
+            <TextField
+              label="Expiry Date"
+              type="date"
+              name="ExpiryDate"
+              fullWidth
+              InputLabelProps={{ shrink: true }}
+              margin="normal"
+              value={formData.ExpiryDate}
+              onChange={handleChange}
+              required
+            />
           </Stack>
-          {error && <Typography color="error" variant="body2">{error}</Typography>}
+          {error && (
+            <Typography color="error" variant="body2">
+              {error}
+            </Typography>
+          )}
           <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
-            <TextField label="Buying Price" type="number" name="BuyingPrice" fullWidth margin="normal" value={formData.BuyingPrice} onChange={handleChange} required />
-            <TextField label="Selling Price" type="number" name="SellingPrice" fullWidth margin="normal" value={formData.SellingPrice} onChange={handleChange} required />
+            <TextField
+              label="Buying Price"
+              type="number"
+              name="BuyingPrice"
+              fullWidth
+              margin="normal"
+              value={formData.BuyingPrice}
+              onChange={handleChange}
+              required
+            />
+            <TextField
+              label="Selling Price"
+              type="number"
+              name="SellingPrice"
+              fullWidth
+              margin="normal"
+              value={formData.SellingPrice}
+              onChange={handleChange}
+              required
+            />
           </Stack>
-          <TextField label="Medicines per Strip" type="number" name="MedicinePerStrip" fullWidth margin="normal" value={formData.MedicinePerStrip} onChange={handleChange} required />
-          <TextField label="How Many Strips" type="number" name="HowManyStrips" fullWidth margin="normal" value={formData.HowManyStrips} onChange={handleChange} required />
+          <TextField
+            label="Medicines per Strip"
+            type="number"
+            name="MedicinePerStrip"
+            fullWidth
+            margin="normal"
+            value={formData.MedicinePerStrip}
+            onChange={handleChange}
+            required
+          />
+          <TextField
+            label="How Many Strips"
+            type="number"
+            name="HowManyStrips"
+            fullWidth
+            margin="normal"
+            value={formData.HowManyStrips}
+            onChange={handleChange}
+            required
+          />
           <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
             <Button variant="outlined" fullWidth onClick={handleCancel}>
               Cancel
             </Button>
-            <Button type="submit" variant="contained" fullWidth disabled={isFormIncomplete}>
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
+              disabled={isFormIncomplete}
+            >
               Add Medicine
             </Button>
           </Stack>
         </form>
       </CardContent>
-      <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: "top", horizontal: "center" }}>
-        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: "100%", background: "#50C878", color: "#ffffff" }}>
-          Medicine Added Successfully!
-        </Alert>
-      </Snackbar>
+      <CustomSnackbar
+        open={openSnackbar}
+        onClose={handleCloseSnackbar}
+        message="Medicine Added Successfully!"
+        severity="success"
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      />
     </Card>
   );
 };

@@ -1,8 +1,21 @@
 import React, { useState, useEffect } from "react";
 import {
+<<<<<<< HEAD
   TextField, Button, Container, Typography, Box, Snackbar, Alert
 } from "@mui/material";
 import apiRequest from "../../api/api"; 
+=======
+  TextField,
+  Button,
+  Container,
+  Typography,
+  Box,
+  Snackbar,
+  Alert,
+} from "@mui/material";
+import CustomSnackbar from "../Snackbar";
+const API_URL = process.env.REACT_APP_API_URL;
+>>>>>>> 3dc968f1651efb0719b46db62e67176b7698754f
 
 const generateUAN = (counter) => {
   const today = new Date();
@@ -25,7 +38,13 @@ function PatientRegistration() {
   });
 
   const [snackbar, setSnackbar] = useState({
+<<<<<<< HEAD
     open: false, message: "", severity: "success"
+=======
+    open: false,
+    message: "",
+    severity: "success",
+>>>>>>> 3dc968f1651efb0719b46db62e67176b7698754f
   });
 
   // Update UAN whenever counter changes
@@ -55,16 +74,26 @@ function PatientRegistration() {
         data: formData,
       });
 
+<<<<<<< HEAD
       setSnackbar({
         open: true,
         message: result.message || "Patient Registered Successfully!",
         severity: "success",
       });
+=======
+      if (response.ok) {
+        setSnackbar({
+          open: true,
+          message: "Patient Registered Successfully!",
+          severity: "success",
+        });
+>>>>>>> 3dc968f1651efb0719b46db62e67176b7698754f
 
       const newCounter = counter + 1;
       setCounter(newCounter);
       localStorage.setItem("uanCounter", newCounter);
 
+<<<<<<< HEAD
       setFormData({
         uan: generateUAN(newCounter),
         patientName: "",
@@ -79,29 +108,116 @@ function PatientRegistration() {
         message: error.message || "Error registering patient",
         severity: "error",
       });
+=======
+        setFormData({
+          uan: generateUAN(newCounter),
+          patientName: "",
+          guardianName: "",
+          address: "",
+          mobile: "",
+          alternateMobile: "",
+        });
+      } else {
+        const errorData = await response.json();
+        setSnackbar({
+          open: true,
+          message: errorData.message || "Registration failed",
+          severity: "error",
+        });
+      }
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: "Error registering patient",
+        severity: "error",
+      });
+      console.error("Registration error:", error);
+>>>>>>> 3dc968f1651efb0719b46db62e67176b7698754f
     }
   };
 
   return (
     <Container maxWidth="sm">
-      <Box sx={{ mt: 4, p: 3, boxShadow: 3, borderRadius: 2, backgroundColor: "white" }}>
+      <Box
+        sx={{
+          mt: 4,
+          p: 3,
+          boxShadow: 3,
+          borderRadius: 2,
+          backgroundColor: "white",
+        }}
+      >
         <Typography variant="h5" gutterBottom>
           Patient Registration
         </Typography>
 
         <form onSubmit={handleSubmit}>
-          <TextField fullWidth margin="normal" label="UAN Number" name="uan" value={formData.uan} disabled />
-          <TextField fullWidth margin="normal" label="Patient Name" name="patientName" value={formData.patientName} onChange={handleChange} required />
-          <TextField fullWidth margin="normal" label="Guardian Name" name="guardianName" value={formData.guardianName} onChange={handleChange} required />
-          <TextField fullWidth margin="normal" label="Address" name="address" value={formData.address} onChange={handleChange} multiline rows={3} required />
-          <TextField fullWidth margin="normal" label="Mobile Number" name="mobile" value={formData.mobile} onChange={handleChange} required />
-          <TextField fullWidth margin="normal" label="Alternate Mobile Number" name="alternateMobile" value={formData.alternateMobile} onChange={handleChange} />
-          <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
+          <TextField
+            fullWidth
+            margin="normal"
+            label="UAN Number"
+            name="uan"
+            value={formData.uan}
+            disabled
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Patient Name"
+            name="patientName"
+            value={formData.patientName}
+            onChange={handleChange}
+            required
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Guardian Name"
+            name="guardianName"
+            value={formData.guardianName}
+            onChange={handleChange}
+            required
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Address"
+            name="address"
+            value={formData.address}
+            onChange={handleChange}
+            multiline
+            rows={3}
+            required
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Mobile Number"
+            name="mobile"
+            value={formData.mobile}
+            onChange={handleChange}
+            required
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Alternate Mobile Number"
+            name="alternateMobile"
+            value={formData.alternateMobile}
+            onChange={handleChange}
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            sx={{ mt: 2 }}
+          >
             Register
           </Button>
         </form>
       </Box>
 
+<<<<<<< HEAD
       <Snackbar
         open={snackbar.open}
         autoHideDuration={4000}
@@ -115,6 +231,15 @@ function PatientRegistration() {
           {snackbar.message}
         </Alert>
       </Snackbar>
+=======
+      <CustomSnackbar
+        open={snackbar.open}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        message={snackbar.message}
+        severity={snackbar.severity}
+        autoHideDuration={4000}
+      />
+>>>>>>> 3dc968f1651efb0719b46db62e67176b7698754f
     </Container>
   );
 }
