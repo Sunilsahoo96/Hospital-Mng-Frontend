@@ -1,11 +1,17 @@
 import { useState } from "react";
-import { TextField, Button, Card, CardContent, Typography, Snackbar, Alert, Stack } from "@mui/material";
-
-
-const API_URL = process.env.REACT_APP_API_URL;
+import {
+  TextField,
+  Button,
+  Card,
+  CardContent,
+  Typography,
+  Snackbar,
+  Alert,
+  Stack,
+} from "@mui/material";
+import apiRequest from "../../api/api"; 
 
 const AddMedicine = () => {
-  
   const [formData, setFormData] = useState({
     MedicineName: "",
     Manufacturer: "",
@@ -14,7 +20,7 @@ const AddMedicine = () => {
     BuyingPrice: "",
     SellingPrice: "",
     MedicinePerStrip: "",
-    HowManyStrips: "",  // Added strip count field
+    HowManyStrips: "",
   });
 
   const [error, setError] = useState("");
@@ -32,34 +38,32 @@ const AddMedicine = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    fetch(`${API_URL}/api/medicine/add-medicine`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify(formData),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.message) {
-          setOpenSnackbar(true);
-          setFormData({
-            MedicineName: "",
-            Manufacturer: "",
-            MfgDate: "",
-            ExpiryDate: "",
-            BuyingPrice: "",
-            SellingPrice: "",
-            MedicinePerStrip: "",
-            HowManyStrips: "",  // Reset strip count
-          });
-        }
-      })
-      .catch((error) => console.error("Error:", error));
+    try {
+      const res = await apiRequest({
+        endpoint: "/api/medicine/add-medicine",
+        method: "POST",
+        data: formData,
+      });
+
+      if (res.message) {
+        setOpenSnackbar(true);
+        setFormData({
+          MedicineName: "",
+          Manufacturer: "",
+          MfgDate: "",
+          ExpiryDate: "",
+          BuyingPrice: "",
+          SellingPrice: "",
+          MedicinePerStrip: "",
+          HowManyStrips: "",
+        });
+      }
+    } catch (err) {
+      console.error("Error:", err.message);
+    }
   };
 
   const handleCancel = () => {

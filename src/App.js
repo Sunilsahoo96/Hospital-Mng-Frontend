@@ -15,6 +15,7 @@ import ReceptionDashboard from "./components/Roles/ReceptionDashboard";
 import PrivateRoute from "./components/PrivateRoute";
 import { ThemeProviderWrapper } from "./Context/ThemeContext";
 import AllPatients from "./components/Patient/AllPatients";
+import SellMedicine from "./components/Medicine/SellMedicine";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/add-medicine" element={<AddMedicine />} />
+            <Route path ="/sell-medicine" element={<SellMedicine />}/>
 
             {/* <Route path="/dashboard" element={<DashboardLayout />}>
               <Route path="get-medicine" element={<AllMedicineDetails />} />

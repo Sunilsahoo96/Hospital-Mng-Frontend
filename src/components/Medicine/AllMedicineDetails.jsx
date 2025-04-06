@@ -3,12 +3,11 @@ import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography,
   CircularProgress, TextField, Stack, Button, TablePagination, TableSortLabel, IconButton
 } from "@mui/material";
-import { Brightness4, Brightness7 } from "@mui/icons-material"; // Icons for toggle
+import { Brightness4, Brightness7 } from "@mui/icons-material";
 import dayjs from "dayjs";
 import { useDebounce } from "../../hooks/useDebounce";
 import ThemeContext from "../../Context/ThemeContext";
-
-const API_URL = process.env.REACT_APP_API_URL;
+import apiRequest from "../../api/api"; 
 
 const AllMedicineDetails = () => {
   const { themeMode, toggleTheme } = useContext(ThemeContext);
@@ -23,22 +22,27 @@ const AllMedicineDetails = () => {
 
   const searchQueryDebounced = useDebounce(searchQuery, 500);
 
-  const fetchMedicines = useCallback(() => {
+  const fetchMedicines = useCallback(async () => {
     setLoading(true);
-    fetch(`${API_URL}/api/medicine/get-medicine?page=${page + 1}&limit=${rowsPerPage}&search=${searchQueryDebounced}`, {
-      headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setMedicines(Array.isArray(data.medicines) ? data.medicines : []);
-        setTotalRows(data.total);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching medicines:", error);
-        setMedicines([]);
-        setLoading(false);
+    try {
+      const data = await apiRequest({
+        endpoint: `/api/medicine/get-medicine`,
+        method: "GET",
+        data: {
+          page: page + 1,
+          limit: rowsPerPage,
+          search: searchQueryDebounced,
+        },
       });
+
+      setMedicines(Array.isArray(data.medicines) ? data.medicines : []);
+      setTotalRows(data.total || 0);
+    } catch (error) {
+      console.error("Error fetching medicines:", error.message);
+      setMedicines([]);
+    } finally {
+      setLoading(false);
+    }
   }, [page, rowsPerPage, searchQueryDebounced]);
 
   useEffect(() => {
@@ -60,13 +64,12 @@ const AllMedicineDetails = () => {
             : "none",
           color: themeMode === "dark" ? "white" : "black",
           boxShadow: themeMode === "dark"
-            ? "0 0 15px rgba(255, 255, 255, 0.2)" // 🌙 Moonlight Glow in Dark Mode
-            : "0 0 10px rgba(0, 0, 0, 0.1)", // 📌 Soft shadow in Light Mode
-          border: themeMode === "dark" ? "none" : "1px solid #ccc", // 📌 Add border in Light Mode
+            ? "0 0 15px rgba(255, 255, 255, 0.2)"
+            : "0 0 10px rgba(0, 0, 0, 0.1)",
+          border: themeMode === "dark" ? "none" : "1px solid #ccc",
           borderRadius: "8px",
         }}
       >
-        {/* Theme Toggle Button */}
         <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
           <Typography variant="h5" align="center" gutterBottom>
             All Medicines
@@ -109,11 +112,11 @@ const AllMedicineDetails = () => {
                       direction={sortOrder}
                       onClick={() => {
                         setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-                        setMedicines([...medicines].sort((a, b) => (
+                        setMedicines([...medicines].sort((a, b) =>
                           sortOrder === "asc"
                             ? a.MedicineName.localeCompare(b.MedicineName)
                             : b.MedicineName.localeCompare(a.MedicineName)
-                        )));
+                        ));
                       }}
                       sx={{
                         color: themeMode === "dark" ? "white" : "black",
@@ -145,7 +148,7 @@ const AllMedicineDetails = () => {
                           backgroundColor: hoveredRow === index
                             ? themeMode === "dark" ? "#333" : "#f0f8ff"
                             : "inherit",
-                          borderBottom: "1px solid #ddd", // 📌 Table row border
+                          borderBottom: "1px solid #ddd",
                         }}
                       >
                         <TableCell>{medicine.MedicineName}</TableCell>

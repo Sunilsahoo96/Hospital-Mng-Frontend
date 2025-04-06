@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { TextField, Button, Container, Typography, Box, Snackbar, Alert } from "@mui/material";
-const API_URL = process.env.REACT_APP_API_URL;
+import {
+  TextField, Button, Container, Typography, Box, Snackbar, Alert
+} from "@mui/material";
+import apiRequest from "../../api/api"; 
 
 const generateUAN = (counter) => {
   const today = new Date();
@@ -10,7 +12,7 @@ const generateUAN = (counter) => {
 
 function PatientRegistration() {
   const [counter, setCounter] = useState(() => {
-    return Number(localStorage.getItem("uanCounter")) || 1; 
+    return Number(localStorage.getItem("uanCounter")) || 1;
   });
 
   const [formData, setFormData] = useState({
@@ -22,7 +24,9 @@ function PatientRegistration() {
     alternateMobile: "",
   });
 
-  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+  const [snackbar, setSnackbar] = useState({
+    open: false, message: "", severity: "success"
+  });
 
   // Update UAN whenever counter changes
   useEffect(() => {
@@ -32,6 +36,7 @@ function PatientRegistration() {
     }));
   }, [counter]);
 
+  // Increment the counter on component mount (ensures new UAN every load)
   useEffect(() => {
     setCounter((prev) => prev + 1);
   }, []);
@@ -44,34 +49,36 @@ function PatientRegistration() {
     e.preventDefault();
 
     try {
-      const response = await fetch(`${API_URL}/api/patient/registration`, {
+      const result = await apiRequest({
+        endpoint: "/api/patient/registration",
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        data: formData,
       });
 
-      if (response.ok) {
-        setSnackbar({ open: true, message: "Patient Registered Successfully!", severity: "success" });
+      setSnackbar({
+        open: true,
+        message: result.message || "Patient Registered Successfully!",
+        severity: "success",
+      });
 
-        const newCounter = counter + 1;
-        setCounter(newCounter);
-        localStorage.setItem("uanCounter", newCounter);
+      const newCounter = counter + 1;
+      setCounter(newCounter);
+      localStorage.setItem("uanCounter", newCounter);
 
-        setFormData({
-          uan: generateUAN(newCounter),
-          patientName: "",
-          guardianName: "",
-          address: "",
-          mobile: "",
-          alternateMobile: "",
-        });
-      } else {
-        const errorData = await response.json();
-        setSnackbar({ open: true, message: errorData.message || "Registration failed", severity: "error" });
-      }
+      setFormData({
+        uan: generateUAN(newCounter),
+        patientName: "",
+        guardianName: "",
+        address: "",
+        mobile: "",
+        alternateMobile: "",
+      });
     } catch (error) {
-      setSnackbar({ open: true, message: "Error registering patient", severity: "error" });
-      console.error("Registration error:", error);
+      setSnackbar({
+        open: true,
+        message: error.message || "Error registering patient",
+        severity: "error",
+      });
     }
   };
 
@@ -81,6 +88,7 @@ function PatientRegistration() {
         <Typography variant="h5" gutterBottom>
           Patient Registration
         </Typography>
+
         <form onSubmit={handleSubmit}>
           <TextField fullWidth margin="normal" label="UAN Number" name="uan" value={formData.uan} disabled />
           <TextField fullWidth margin="normal" label="Patient Name" name="patientName" value={formData.patientName} onChange={handleChange} required />
@@ -94,9 +102,16 @@ function PatientRegistration() {
         </form>
       </Box>
 
-      {/* Snackbar for notifications */}
-      <Snackbar open={snackbar.open} autoHideDuration={4000} onClose={() => setSnackbar({ ...snackbar, open: false })}>
-        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: "100%", background: "#50C878", color: "#ffffff" }}>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+      >
+        <Alert
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+          severity={snackbar.severity}
+          sx={{ width: "100%", background: "#50C878", color: "#ffffff" }}
+        >
           {snackbar.message}
         </Alert>
       </Snackbar>

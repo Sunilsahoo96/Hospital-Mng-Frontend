@@ -106,13 +106,17 @@ const Auth = () => {
         setErrorMessage("Invalid email format. Please enter a valid email.");
         setEmailExists(true);
       } else if (error.response?.status === 401) {
-        setErrorMessage("Incorrect email or password. Please try again.");
+        setErrorMessage("Incorrect password. Please try again.");
+        setEmailExists(true);
+      } else if (error.response?.status === 404) {
+        setErrorMessage("User not found. Please sign up first.");
         setEmailExists(true);
       } else if (error.response?.status === 409) {
-        setErrorMessage(errorMsg); 
-        setEmailExists(true); 
+        setErrorMessage(errorMsg);
+        setEmailExists(true);
       } else {
         setErrorMessage(errorMsg);
+        setEmailExists(true);
       }
     }
   };
