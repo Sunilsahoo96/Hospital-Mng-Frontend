@@ -16,7 +16,7 @@ import {
 import ThemeContext from "../Context/ThemeContext";
 
 const API_URL = process.env.REACT_APP_API_URL;
-const isDarkMode = isDarkMode;
+const isDarkMode = false;
 
 const generateUAN = (counter) => {
   const today = new Date();

@@ -2,24 +2,22 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import './App.css';
 import "./Hospital.css";
 import AddMedicine from './components/Medicine/AddMedicine';
-import PatientRegistration from "./components/RegestrationPatient";
+import PatientRegistration from "./components/Patient/RegestrationPatient";
 import Auth from "./components/Auth";
 import Home from "./components/Home";
 import AllMedicineDetails from "./components/Medicine/AllMedicineDetails";
-import DashboardLayout from "./components/Dashboard";
 import AdminDashboard from "./components/Roles/AdminDashboard";
 import MedicineCashierDashboard from "./components/Medicine/MedicineCashierDashboard"
 import DoctorDashboard from "./components/Roles/DoctorDashboard";
 import NurseDashboard from "./components/Roles/NurseDashboard";
 import ReceptionDashboard from "./components/Roles/ReceptionDashboard";
 import PrivateRoute from "./components/PrivateRoute";
-import { ThemeProviderWrapper } from "./Context/ThemeContext";
 import AllPatients from "./components/Patient/AllPatients";
 import SellMedicine from "./components/Medicine/SellMedicine";
 
 function App() {
   return (
-    <ThemeProviderWrapper>
+    
       <Router>
         <div className="App">
           <Routes>
@@ -65,7 +63,7 @@ function App() {
           </Routes>
         </div>
       </Router >
-    </ThemeProviderWrapper>
+
   )
 }
 

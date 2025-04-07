@@ -1,21 +1,9 @@
 import React, { useState, useEffect } from "react";
 import {
-<<<<<<< HEAD
-  TextField, Button, Container, Typography, Box, Snackbar, Alert
+  TextField, Button, Container, Typography, Box
 } from "@mui/material";
 import apiRequest from "../../api/api"; 
-=======
-  TextField,
-  Button,
-  Container,
-  Typography,
-  Box,
-  Snackbar,
-  Alert,
-} from "@mui/material";
 import CustomSnackbar from "../Snackbar";
-const API_URL = process.env.REACT_APP_API_URL;
->>>>>>> 3dc968f1651efb0719b46db62e67176b7698754f
 
 const generateUAN = (counter) => {
   const today = new Date();
@@ -38,13 +26,7 @@ function PatientRegistration() {
   });
 
   const [snackbar, setSnackbar] = useState({
-<<<<<<< HEAD
     open: false, message: "", severity: "success"
-=======
-    open: false,
-    message: "",
-    severity: "success",
->>>>>>> 3dc968f1651efb0719b46db62e67176b7698754f
   });
 
   // Update UAN whenever counter changes
@@ -74,26 +56,16 @@ function PatientRegistration() {
         data: formData,
       });
 
-<<<<<<< HEAD
       setSnackbar({
         open: true,
         message: result.message || "Patient Registered Successfully!",
         severity: "success",
       });
-=======
-      if (response.ok) {
-        setSnackbar({
-          open: true,
-          message: "Patient Registered Successfully!",
-          severity: "success",
-        });
->>>>>>> 3dc968f1651efb0719b46db62e67176b7698754f
 
       const newCounter = counter + 1;
       setCounter(newCounter);
       localStorage.setItem("uanCounter", newCounter);
 
-<<<<<<< HEAD
       setFormData({
         uan: generateUAN(newCounter),
         patientName: "",
@@ -108,31 +80,6 @@ function PatientRegistration() {
         message: error.message || "Error registering patient",
         severity: "error",
       });
-=======
-        setFormData({
-          uan: generateUAN(newCounter),
-          patientName: "",
-          guardianName: "",
-          address: "",
-          mobile: "",
-          alternateMobile: "",
-        });
-      } else {
-        const errorData = await response.json();
-        setSnackbar({
-          open: true,
-          message: errorData.message || "Registration failed",
-          severity: "error",
-        });
-      }
-    } catch (error) {
-      setSnackbar({
-        open: true,
-        message: "Error registering patient",
-        severity: "error",
-      });
-      console.error("Registration error:", error);
->>>>>>> 3dc968f1651efb0719b46db62e67176b7698754f
     }
   };
 
@@ -217,21 +164,6 @@ function PatientRegistration() {
         </form>
       </Box>
 
-<<<<<<< HEAD
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={4000}
-        onClose={() => setSnackbar({ ...snackbar, open: false })}
-      >
-        <Alert
-          onClose={() => setSnackbar({ ...snackbar, open: false })}
-          severity={snackbar.severity}
-          sx={{ width: "100%", background: "#50C878", color: "#ffffff" }}
-        >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
-=======
       <CustomSnackbar
         open={snackbar.open}
         onClose={() => setSnackbar({ ...snackbar, open: false })}
@@ -239,7 +171,6 @@ function PatientRegistration() {
         severity={snackbar.severity}
         autoHideDuration={4000}
       />
->>>>>>> 3dc968f1651efb0719b46db62e67176b7698754f
     </Container>
   );
 }

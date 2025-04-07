@@ -9,12 +9,8 @@ import {
   Alert,
   Stack,
 } from "@mui/material";
-<<<<<<< HEAD
 import apiRequest from "../../api/api"; 
-=======
 import CustomSnackbar from "../Snackbar";
-const API_URL = process.env.REACT_APP_API_URL;
->>>>>>> 3dc968f1651efb0719b46db62e67176b7698754f
 
 const AddMedicine = () => {
   const [formData, setFormData] = useState({
@@ -25,11 +21,7 @@ const AddMedicine = () => {
     BuyingPrice: "",
     SellingPrice: "",
     MedicinePerStrip: "",
-<<<<<<< HEAD
     HowManyStrips: "",
-=======
-    HowManyStrips: "", // Added strip count field
->>>>>>> 3dc968f1651efb0719b46db62e67176b7698754f
   });
 
   const [error, setError] = useState("");
@@ -54,7 +46,6 @@ const AddMedicine = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-<<<<<<< HEAD
     try {
       const res = await apiRequest({
         endpoint: "/api/medicine/add-medicine",
@@ -78,33 +69,6 @@ const AddMedicine = () => {
     } catch (err) {
       console.error("Error:", err.message);
     }
-=======
-    fetch(`${API_URL}/api/medicine/add-medicine`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify(formData),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.message) {
-          setOpenSnackbar(true);
-          setFormData({
-            MedicineName: "",
-            Manufacturer: "",
-            MfgDate: "",
-            ExpiryDate: "",
-            BuyingPrice: "",
-            SellingPrice: "",
-            MedicinePerStrip: "",
-            HowManyStrips: "", // Reset strip count
-          });
-        }
-      })
-      .catch((error) => console.error("Error:", error));
->>>>>>> 3dc968f1651efb0719b46db62e67176b7698754f
   };
 
   const handleCancel = () => {

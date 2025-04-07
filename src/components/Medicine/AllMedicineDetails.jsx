@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useContext } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   Table,
   TableBody,
@@ -14,22 +14,12 @@ import {
   Button,
   TablePagination,
   TableSortLabel,
-  IconButton,
 } from "@mui/material";
-import { Brightness4, Brightness7 } from "@mui/icons-material";
 import dayjs from "dayjs";
 import { useDebounce } from "../../hooks/useDebounce";
-import ThemeContext from "../../Context/ThemeContext";
-<<<<<<< HEAD
-import apiRequest from "../../api/api"; 
-=======
-
-const API_URL = process.env.REACT_APP_API_URL;
-const isDarkMode = isDarkMode;
->>>>>>> 3dc968f1651efb0719b46db62e67176b7698754f
+import apiRequest from "../../api/api";
 
 const AllMedicineDetails = () => {
-  const { themeMode, toggleTheme } = useContext(ThemeContext);
   const [medicines, setMedicines] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -43,7 +33,6 @@ const AllMedicineDetails = () => {
 
   const fetchMedicines = useCallback(async () => {
     setLoading(true);
-<<<<<<< HEAD
     try {
       const data = await apiRequest({
         endpoint: `/api/medicine/get-medicine`,
@@ -53,26 +42,6 @@ const AllMedicineDetails = () => {
           limit: rowsPerPage,
           search: searchQueryDebounced,
         },
-=======
-    fetch(
-      `${API_URL}/api/medicine/get-medicine?page=${
-        page + 1
-      }&limit=${rowsPerPage}&search=${searchQueryDebounced}`,
-      {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        setMedicines(Array.isArray(data.medicines) ? data.medicines : []);
-        setTotalRows(data.total);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching medicines:", error);
-        setMedicines([]);
-        setLoading(false);
->>>>>>> 3dc968f1651efb0719b46db62e67176b7698754f
       });
 
       setMedicines(Array.isArray(data.medicines) ? data.medicines : []);
@@ -98,50 +67,15 @@ const AllMedicineDetails = () => {
           margin: "auto",
           mt: 4,
           p: 2,
-<<<<<<< HEAD
-          backgroundColor: themeMode === "dark" ? "#0D1B2A" : "#ffffff",
-          backgroundImage: themeMode === "dark"
-            ? "radial-gradient(circle at 30% 30%, #30475E, #0D1B2A)"
-            : "none",
-          color: themeMode === "dark" ? "white" : "black",
-          boxShadow: themeMode === "dark"
-            ? "0 0 15px rgba(255, 255, 255, 0.2)"
-            : "0 0 10px rgba(0, 0, 0, 0.1)",
-          border: themeMode === "dark" ? "none" : "1px solid #ccc",
+          backgroundColor: "#ffffff",
+          boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+          border: "1px solid #ccc",
           borderRadius: "8px",
         }}
       >
-        <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
-=======
-          backgroundColor: isDarkMode ? "#0D1B2A" : "#ffffff",
-          backgroundImage:
-            isDarkMode
-              ? "radial-gradient(circle at 30% 30%, #30475E, #0D1B2A)"
-              : "none",
-          color: isDarkMode ? "white" : "black",
-          boxShadow:
-            isDarkMode
-              ? "0 0 15px rgba(255, 255, 255, 0.2)" // 🌙 Moonlight Glow in Dark Mode
-              : "0 0 10px rgba(0, 0, 0, 0.1)", // 📌 Soft shadow in Light Mode
-          border: isDarkMode ? "none" : "1px solid #ccc", // 📌 Add border in Light Mode
-          borderRadius: "8px",
-        }}
-      >
-        {/* Theme Toggle Button */}
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          sx={{ mb: 2 }}
-        >
->>>>>>> 3dc968f1651efb0719b46db62e67176b7698754f
-          <Typography variant="h5" align="center" gutterBottom>
-            All Medicines
-          </Typography>
-          <IconButton onClick={toggleTheme} color="inherit">
-            {isDarkMode ? <Brightness4 /> : <Brightness7 />}
-          </IconButton>
-        </Stack>
+        <Typography variant="h5" align="center" gutterBottom>
+          All Medicines
+        </Typography>
 
         <Stack
           direction="row"
@@ -154,10 +88,6 @@ const AllMedicineDetails = () => {
             size="small"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            sx={{
-              backgroundColor: isDarkMode ? "#333" : "white",
-              input: { color: isDarkMode ? "white" : "black" },
-            }}
           />
           <Button variant="contained" onClick={fetchMedicines} color="primary">
             Search
@@ -168,44 +98,23 @@ const AllMedicineDetails = () => {
           <CircularProgress sx={{ display: "block", margin: "auto" }} />
         ) : (
           <>
-            <Table sx={{ borderCollapse: "collapse" }}>
+            <Table>
               <TableHead>
-                <TableRow
-                  sx={{
-                    backgroundColor: isDarkMode ? "#222" : "#f5f5f5",
-                    borderBottom: "2px solid #ddd",
-                  }}
-                >
+                <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
                   <TableCell>
                     <TableSortLabel
                       active
                       direction={sortOrder}
                       onClick={() => {
-                        setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-<<<<<<< HEAD
-                        setMedicines([...medicines].sort((a, b) =>
-                          sortOrder === "asc"
-                            ? a.MedicineName.localeCompare(b.MedicineName)
-                            : b.MedicineName.localeCompare(a.MedicineName)
-                        ));
-=======
+                        const newOrder = sortOrder === "asc" ? "desc" : "asc";
+                        setSortOrder(newOrder);
                         setMedicines(
                           [...medicines].sort((a, b) =>
-                            sortOrder === "asc"
+                            newOrder === "asc"
                               ? a.MedicineName.localeCompare(b.MedicineName)
                               : b.MedicineName.localeCompare(a.MedicineName)
                           )
                         );
->>>>>>> 3dc968f1651efb0719b46db62e67176b7698754f
-                      }}
-                      sx={{
-                        color: isDarkMode ? "white" : "black",
-                        "& .MuiTableSortLabel-icon": {
-                          color:
-                            isDarkMode
-                              ? "white !important"
-                              : "black !important",
-                        },
                       }}
                     >
                       <b>Medicine Name</b>
@@ -238,20 +147,9 @@ const AllMedicineDetails = () => {
                         onMouseEnter={() => setHoveredRow(index)}
                         onMouseLeave={() => setHoveredRow(null)}
                         sx={{
-<<<<<<< HEAD
-                          backgroundColor: hoveredRow === index
-                            ? themeMode === "dark" ? "#333" : "#f0f8ff"
-                            : "inherit",
-                          borderBottom: "1px solid #ddd",
-=======
                           backgroundColor:
-                            hoveredRow === index
-                              ? isDarkMode
-                                ? "#333"
-                                : "#f0f8ff"
-                              : "inherit",
-                          borderBottom: "1px solid #ddd", // 📌 Table row border
->>>>>>> 3dc968f1651efb0719b46db62e67176b7698754f
+                            hoveredRow === index ? "#f0f8ff" : "inherit",
+                          borderBottom: "1px solid #ddd",
                         }}
                       >
                         <TableCell>{medicine.MedicineName}</TableCell>

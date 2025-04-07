@@ -15,10 +15,14 @@
 
 
 body {
-    background: radial-gradient(circle at 30% 30%, #30475E, #0D1B2A);
+    /* background: radial-gradient(circle at 30% 30%, #30475E, #0D1B2A); */
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100vh;
+}
+body::-webkit-scrollbar{
+    display: none;
 }
 
 
