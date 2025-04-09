@@ -48,7 +48,7 @@ const AllPatients = () => {
           border: "1px solid #ccc",
           borderRadius: "8px", }}
       >
-        <Typography variant="h5" gutterBottom sx={{ mt: 2, }}>
+        <Typography variant="h5">
           All Patients
         </Typography>
         <Stack

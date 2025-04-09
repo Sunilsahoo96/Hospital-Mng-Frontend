@@ -14,6 +14,7 @@ import {
   Button,
   TablePagination,
   TableSortLabel,
+  Container
 } from "@mui/material";
 import dayjs from "dayjs";
 import { useDebounce } from "../../hooks/useDebounce";
@@ -59,7 +60,7 @@ const AllMedicineDetails = () => {
   }, [fetchMedicines]);
 
   return (
-    <div style={{ height: "89vh" }}>
+    <Container maxWidth="md">
       <TableContainer
         component={Paper}
         sx={{
@@ -73,7 +74,7 @@ const AllMedicineDetails = () => {
           borderRadius: "8px",
         }}
       >
-        <Typography variant="h5"  gutterBottom>
+        <Typography variant="h5" >
           All Medicines
         </Typography>
 
@@ -194,7 +195,7 @@ const AllMedicineDetails = () => {
           </>
         )}
       </TableContainer>
-    </div>
+    </Container>
   );
 };
 

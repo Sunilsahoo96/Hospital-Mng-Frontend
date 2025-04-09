@@ -5,7 +5,7 @@ import {
 import apiRequest from "../../api/api"; 
 import CustomSnackbar from "../Snackbar";
 
-const generateUAN = (counter) => {
+const generatePUN = (counter) => {
   const today = new Date();
   const formattedDate = today.toISOString().split("T")[0].replace(/-/g, "");
   return `${formattedDate}${counter}`;
@@ -17,7 +17,7 @@ function PatientRegistration() {
   });
 
   const [formData, setFormData] = useState({
-    uan: "",
+    pun: "",
     patientName: "",
     guardianName: "",
     address: "",
@@ -29,15 +29,13 @@ function PatientRegistration() {
     open: false, message: "", severity: "success"
   });
 
-  // Update UAN whenever counter changes
   useEffect(() => {
     setFormData((prevData) => ({
       ...prevData,
-      uan: generateUAN(counter),
+      pun: generatePUN(counter),
     }));
   }, [counter]);
 
-  // Increment the counter on component mount (ensures new UAN every load)
   useEffect(() => {
     setCounter((prev) => prev + 1);
   }, []);
@@ -67,7 +65,7 @@ function PatientRegistration() {
       localStorage.setItem("uanCounter", newCounter);
 
       setFormData({
-        uan: generateUAN(newCounter),
+        pun: generatePUN(newCounter),
         patientName: "",
         guardianName: "",
         address: "",
@@ -102,9 +100,9 @@ function PatientRegistration() {
           <TextField
             fullWidth
             margin="normal"
-            label="UAN Number"
-            name="uan"
-            value={formData.uan}
+            label="PUN Number"
+            name="pun"
+            value={formData.pun}
             disabled
           />
           <TextField
