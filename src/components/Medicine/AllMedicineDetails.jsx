@@ -73,14 +73,14 @@ const AllMedicineDetails = () => {
           borderRadius: "8px",
         }}
       >
-        <Typography variant="h5" align="center" gutterBottom>
+        <Typography variant="h5"  gutterBottom>
           All Medicines
         </Typography>
 
         <Stack
           direction="row"
           spacing={2}
-          sx={{ mb: 2, justifyContent: "center" }}
+          sx={{ mb: 2, justifyContent: "right" }}
         >
           <TextField
             label="Medicine Name"

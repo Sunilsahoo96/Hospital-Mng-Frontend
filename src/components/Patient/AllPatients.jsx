@@ -34,23 +34,27 @@ const AllPatients = () => {
     fetchPatients();
   }, []);
 
-  const handleSearch = () => {
-    fetchPatients();
-  };
 
   return (
     <Container maxWidth="md">
       <TableContainer
         component={Paper}
-        sx={{ maxWidth: 1200, margin: "auto", mt: 4, p: 2 }}
+        sx={{ maxWidth: 2000,
+          margin: "auto",
+          mt: 4,
+          p: 2,
+          backgroundColor: "#ffffff",
+          boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+          border: "1px solid #ccc",
+          borderRadius: "8px", }}
       >
-        <Typography variant="h5" gutterBottom sx={{ mt: 4, mb: 2 }}>
+        <Typography variant="h5" gutterBottom sx={{ mt: 2, }}>
           All Patients
         </Typography>
         <Stack
           direction="row"
           spacing={2}
-          sx={{ mb: 2, justifyContent: "center" }}
+          sx={{ mb: 2, justifyContent: "right" }}
         >
           <TextField label="Patient Name" variant="outlined" size="small" />
           <Button variant="contained" color="primary">
@@ -59,7 +63,7 @@ const AllPatients = () => {
         </Stack>
         <Table>
           <TableHead>
-            <TableRow>
+            <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
               {headers.map((label, index) => (
                 <TableCell key={index}>
                   <strong>{label}</strong>
