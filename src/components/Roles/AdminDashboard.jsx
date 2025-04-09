@@ -6,11 +6,7 @@ import {
   ListItem,
   ListItemText,
   Box,
-  Switch,
   Typography,
-  IconButton,
-  Menu,
-  MenuItem,
   Snackbar,
   Alert,
   Button,
@@ -25,7 +21,6 @@ const AdminDashboard = () => {
   const { themeMode, toggleTheme } = useContext(ThemeContext);
   const navigate = useNavigate();
 
-  const [profileAnchor, setProfileAnchor] = useState(null);
   const [logoutSuccess, setLogoutSuccess] = useState(false);
   const [confirmLogout, setConfirmLogout] = useState(false);
 
@@ -138,7 +133,7 @@ const AdminDashboard = () => {
             justifyContent: "space-between",
             alignItems: "center",
             background: "#f5f5f5",
-            p: 3,
+            p: 2,
             boxShadow: 1,
           }}
         >

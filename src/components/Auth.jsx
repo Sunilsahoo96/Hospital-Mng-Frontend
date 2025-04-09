@@ -77,14 +77,14 @@ const Auth = () => {
     }
 
     const endpoint = isLogin ? "login" : "signup";
-    const requestData = isLogin
+    const authData = isLogin
       ? { email: formData.email, password: formData.password }
       : formData;
 
     try {
       const response = await axios.post(
         `http://localhost:8000/api/auth/${endpoint}`,
-        requestData
+        authData
       );
 
       if (isLogin) {
