@@ -1,4 +1,10 @@
-import { Snackbar, Alert } from "@mui/material";
+import React from "react";
+import { Snackbar, Alert, Slide } from "@mui/material";
+
+// Slide Transition Function
+function SlideTransition(props) {
+  return <Slide {...props} direction="down" />;
+}
 
 const CustomSnackbar = ({
   open,
@@ -6,7 +12,7 @@ const CustomSnackbar = ({
   message,
   severity,
   autoHideDuration = 3000,
-  anchorOrigin,
+  anchorOrigin = { vertical: "top", horizontal: "center" },
 }) => {
   return (
     <Snackbar
@@ -14,11 +20,16 @@ const CustomSnackbar = ({
       autoHideDuration={autoHideDuration}
       onClose={onClose}
       anchorOrigin={anchorOrigin}
+      TransitionComponent={SlideTransition}
     >
       <Alert
         onClose={onClose}
         severity={severity}
-        sx={{ width: "100%", background: "#50C878", color: "#ffffff" }}
+        sx={{
+          width: "100%",
+          background: severity === "success" ? "#50C878" : "#f44336",
+          color: "#ffffff",
+        }}
       >
         {message}
       </Alert>

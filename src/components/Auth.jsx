@@ -9,12 +9,12 @@ import {
   Select,
   MenuItem,
   Button,
-  Alert,
-  Snackbar,
 } from "@mui/material";
+import CustomSnackbar from "./Snackbar";
 import "../Hospital.css";
 
 const Auth = () => {
+  const roles = ["doctor", "nurse", "reception", "admin", "medicine cashier"];
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
@@ -27,12 +27,22 @@ const Auth = () => {
   const [signupSuccess, setSignupSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [emailExists, setEmailExists] = useState(false);
+  const [showPasswordCriteria, setShowPasswordCriteria] = useState(false);
 
   const navigate = useNavigate();
 
+  const passwordCriteria = {
+    hasLowercase: /[a-z]/.test(formData.password),
+    hasUppercase: /[A-Z]/.test(formData.password),
+    hasNumber: /\d/.test(formData.password),
+    hasSpecialChar: /[@$!%*?&]/.test(formData.password),
+    hasMinLength: formData.password.length >= 8,
+    hasMaxLength: formData.password.length <= 20,
+  };
+
   const validatePassword = (password) => {
     const strongPasswordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
     return strongPasswordRegex.test(password);
   };
 
@@ -51,16 +61,14 @@ const Auth = () => {
     setSignupSuccess(false);
 
     if (!isLogin) {
-      // Validate password strength
       if (!validatePassword(formData.password)) {
         setErrorMessage(
-          "Password must be at least 8 characters, contain an uppercase letter, a lowercase letter, a number, and a special character."
+          "Password must be 8-20 characters, include uppercase, lowercase, number, and special character."
         );
         setEmailExists(true);
         return;
       }
 
-      // Confirm password match
       if (formData.password !== formData.confirmPassword) {
         setErrorMessage("Passwords do not match.");
         setEmailExists(true);
@@ -69,7 +77,6 @@ const Auth = () => {
     }
 
     const endpoint = isLogin ? "login" : "signup";
-
     const requestData = isLogin
       ? { email: formData.email, password: formData.password }
       : formData;
@@ -81,15 +88,13 @@ const Auth = () => {
       );
 
       if (isLogin) {
-        // Login successful: store token and redirect to dashboard
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("userName", response.data.name);
         localStorage.setItem("userRole", response.data.role);
         setLoginSuccess(true);
 
-        setTimeout(() => navigate(getDashboardRoute(response.data.role)), 2000); //role based navigation
+        setTimeout(() => navigate(getDashboardRoute(response.data.role)), 2000);
       } else {
-        // Signup successful: show Snackbar alert
         setSignupSuccess(true);
         setTimeout(() => {
           setIsLogin(true);
@@ -101,20 +106,17 @@ const Auth = () => {
 
       if (error.response?.status === 400) {
         setErrorMessage("Invalid email format. Please enter a valid email.");
-        setEmailExists(true);
       } else if (error.response?.status === 401) {
         setErrorMessage("Incorrect email or password. Please try again.");
-        setEmailExists(true);
       } else if (error.response?.status === 404) {
         setErrorMessage("User not found. Please sign up first.");
-        setEmailExists(true);
       } else if (error.response?.status === 409) {
         setErrorMessage(errorMsg);
-        setEmailExists(true);
       } else {
         setErrorMessage(errorMsg);
-        setEmailExists(true);
       }
+
+      setEmailExists(true);
     }
   };
 
@@ -155,6 +157,7 @@ const Auth = () => {
               onChange={handleChange}
               required
             />
+
             <TextField
               className="auth-input"
               name="password"
@@ -163,8 +166,37 @@ const Auth = () => {
               variant="outlined"
               value={formData.password}
               onChange={handleChange}
+              onFocus={() => setShowPasswordCriteria(true)}
+              onBlur={() => setShowPasswordCriteria(false)}
               required
             />
+
+            {!isLogin && showPasswordCriteria && (
+              <div style={{ marginTop: "10px" }}>
+                <Typography variant="subtitle2">Your password must include:</Typography>
+                <ul style={{ paddingLeft: "20px", fontSize: "0.85rem" }}>
+                  <li style={{ color: passwordCriteria.hasLowercase ? "green" : "red" }}>
+                    One lowercase character
+                  </li>
+                  <li style={{ color: passwordCriteria.hasUppercase ? "green" : "red" }}>
+                    One uppercase character
+                  </li>
+                  <li style={{ color: passwordCriteria.hasNumber ? "green" : "red" }}>
+                    One number
+                  </li>
+                  <li style={{ color: passwordCriteria.hasSpecialChar ? "green" : "red" }}>
+                    One special character
+                  </li>
+                  <li style={{ color: passwordCriteria.hasMinLength ? "green" : "red" }}>
+                    8 characters minimum
+                  </li>
+                  <li style={{ color: passwordCriteria.hasMaxLength ? "green" : "red" }}>
+                    20 characters maximum
+                  </li>
+                </ul>
+              </div>
+            )}
+
             {!isLogin && (
               <TextField
                 className="auth-input"
@@ -185,11 +217,14 @@ const Auth = () => {
                 value={formData.role}
                 onChange={handleChange}
               >
-                <MenuItem value="doctor">Doctor</MenuItem>
-                <MenuItem value="nurse">Nurse</MenuItem>
-                <MenuItem value="reception">Reception</MenuItem>
-                <MenuItem value="admin">Admin</MenuItem>
-                <MenuItem value="medicine cashier">Medicine Cashier</MenuItem>
+                {roles.map((role) => (
+                  <MenuItem key={role} value={role}>
+                    {role
+                      .split(" ")
+                      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                      .join(" ")}
+                  </MenuItem>
+                ))}
               </Select>
             )}
 
@@ -205,50 +240,30 @@ const Auth = () => {
           </Button>
         </Paper>
 
-        {/* Login Success Alert (Fixed Top-Center) */}
-        {loginSuccess && (
-          <Alert
-            severity="success"
-            sx={{
-              position: "fixed",
-              top: 20,
-              left: "50%",
-              transform: "translateX(-50%)",
-              zIndex: 1300,
-              width: "fit-content",
-              textAlign: "center",
-              background: "#50C878",
-              color: "#ffffff",
-            }}
-          >
-            Login successful! Redirecting...
-          </Alert>
-        )}
+        {/* CustomSnackbars */}
+        <CustomSnackbar
+          open={loginSuccess}
+          onClose={() => setLoginSuccess(false)}
+          message="Login successful! Redirecting..."
+          severity="success"
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        />
 
-        {/* Signup Success Snackbar (Top-Center) */}
-        <Snackbar
+        <CustomSnackbar
           open={signupSuccess}
-          autoHideDuration={3000}
           onClose={() => setSignupSuccess(false)}
+          message="Sign-up successful! Please log in."
+          severity="success"
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        >
-          <Alert
-            severity="success"
-            sx={{ width: "100%", background: "#50C878", color: "#ffffff" }}
-          >
-            Sign-up successful! Please log in.
-          </Alert>
-        </Snackbar>
-        <Snackbar
+        />
+
+        <CustomSnackbar
           open={emailExists}
-          autoHideDuration={3000}
           onClose={() => setEmailExists(false)}
+          message={errorMessage}
+          severity="error"
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        >
-          <Alert severity="error" sx={{ width: "100%" }}>
-            {errorMessage}
-          </Alert>
-        </Snackbar>
+        />
       </Container>
     </div>
   );
