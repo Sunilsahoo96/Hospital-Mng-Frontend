@@ -14,6 +14,7 @@ import ReceptionDashboard from "./components/Roles/ReceptionDashboard";
 import PrivateRoute from "./components/PrivateRoute";
 import AllPatients from "./components/Patient/AllPatients";
 import SellMedicine from "./components/Medicine/SellMedicine";
+import DoctorHomeDashboard from "./components/Roles/DoctorHomeDashboard";
 
 function App() {
   return (
@@ -59,6 +60,11 @@ function App() {
             </Route>
 
 
+            <Route element={<PrivateRoute allowedRoles={["doctor"]} />}>
+              <Route path="/doctor-dashboard" element={<DoctorDashboard/>}>
+                  <Route path="doctor-home-dashboard" element={<DoctorHomeDashboard/>}/>
+              </Route>
+            </Route>
 
           </Routes>
         </div>
