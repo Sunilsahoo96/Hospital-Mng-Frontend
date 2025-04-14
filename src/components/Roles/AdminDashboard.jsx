@@ -14,11 +14,11 @@ import {
   DialogTitle,
   DialogActions,
 } from "@mui/material";
-import { AccountCircle, Logout } from "@mui/icons-material";
+import { Logout } from "@mui/icons-material";
 import { ThemeContext } from "@emotion/react";
 
 const AdminDashboard = () => {
-  const { themeMode, toggleTheme } = useContext(ThemeContext);
+  const { themeMode} = useContext(ThemeContext);
   const navigate = useNavigate();
 
   const [logoutSuccess, setLogoutSuccess] = useState(false);
