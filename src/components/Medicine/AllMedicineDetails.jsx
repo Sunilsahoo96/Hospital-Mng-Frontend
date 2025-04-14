@@ -131,7 +131,7 @@ const AllMedicineDetails = () => {
                     <b>Selling Price</b>
                   </TableCell>
                   <TableCell>
-                    <b>Total Count of Medicine</b>
+                    <b>Total Count</b>
                   </TableCell>
                 </TableRow>
               </TableHead>
@@ -142,14 +142,18 @@ const AllMedicineDetails = () => {
                     const totalCount =
                       (medicine.HowManyStrips || 0) *
                       (medicine.MedicinePerStrip || 0);
+                      const isLowStock = totalCount < 50;
                     return (
                       <TableRow
                         key={medicine._id}
                         onMouseEnter={() => setHoveredRow(index)}
                         onMouseLeave={() => setHoveredRow(null)}
                         sx={{
-                          backgroundColor:
-                            hoveredRow === index ? "#f0f8ff" : "inherit",
+                          backgroundColor: isLowStock
+                            ? "#ffe6e6" // 
+                            : hoveredRow === index
+                            ? "#f0f8ff" // light blue on hover
+                            : "inherit",
                           borderBottom: "1px solid #ddd",
                         }}
                       >
