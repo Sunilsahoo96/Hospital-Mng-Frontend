@@ -83,7 +83,7 @@ const Auth = () => {
 
     try {
       const response = await axios.post(
-        `https://hospital-mng-backend.onrender.com/api/auth/${endpoint}`,
+        `http://localhost:8000/api/auth/${endpoint}`,
         authData
       );
 

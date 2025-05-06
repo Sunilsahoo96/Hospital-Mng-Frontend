@@ -3,7 +3,7 @@ import './App.css';
 import "./Hospital.css";
 import AddMedicine from './components/Medicine/AddMedicine';
 import PatientRegistration from "./components/Patient/RegestrationPatient";
-import Auth from "./components/auth";
+import Auth from "./components/Auth";
 import Home from "./components/Home";
 import AllMedicineDetails from "./components/Medicine/AllMedicineDetails";
 import AdminDashboard from "./components/Roles/AdminDashboard";
