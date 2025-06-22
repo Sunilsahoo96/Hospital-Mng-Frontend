@@ -1,5 +1,3 @@
-
-
 const API_URL = process.env.REACT_APP_API_URL;
 
 const apiRequest = async ({ endpoint, method = "GET", data = null, token = localStorage.getItem("token") }) => {
